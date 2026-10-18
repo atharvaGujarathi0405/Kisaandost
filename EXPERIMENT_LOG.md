@@ -76,3 +76,16 @@ Every entry records only measured results. Unmeasured = PENDING, unavailable = N
 - **Human-verified segments: 0.** WER/CER NOT AVAILABLE. `run_gold_eval.py` exits safely ("No verified segments").
 - **Limitations:** heuristic, uncalibrated weights; the agreement signal uses the baseline model (circular, so it can't select test data); ASR decoding stability is not available.
 - **Next step:** human review of JHN_001 in the review server, then the first PILOT WER/CER, then compare triage against the human decisions and recalibrate.
+
+## P1e: Candidate lexicon mining from aligned data (no model run)
+
+- **Date:** 2026-10-12
+- **Objective:** List candidate (published Varhadi form, Marathi-ASR rendering) pairs as a worklist for a native speaker. These are error observations, not a Varhadi→Marathi mapping: `standard_marathi` is always empty and `verified` always false.
+- **Dataset:** `data/transcripts/gold_transcripts.csv`, 1,296 candidate segments (40 chapters), `candidate_text` vs `raw_asr` of the same row. Human-verified segments: 0.
+- **Method:** `varhadi_data/lexicon.py` and `scripts/mine_lexicon.py`. Punctuation stripping only (`strip_punctuation`), whitespace tokens, `difflib.SequenceMatcher` (autojunk off). Only equal-length `replace` blocks are paired 1:1. Inserts, deletes and unequal-length replaces (word merges/splits) are counted and skipped. consistency = pair count / all pairs for that form. Ranking: count desc, then consistency desc. Output: `data/transcripts/lexicon_candidates.tsv` (gitignored).
+- **Result, all segments:** 12,992 substitutions; skipped 1,098 unequal replaces, 51 deletes, 26 inserts; 2,435 unique forms, 3,545 unique pairs. count ≥ 3: 528; consistency ≥ 0.5: 2,509; both (rows written): 345.
+- **Result, HIGH_CONFIDENCE_CANDIDATE only:** 718 segments, 6,642 substitutions (skipped 493/14/8), 1,603 forms, 2,171 pairs; count ≥ 3: 297; consistency ≥ 0.5: 1,656; both: 205.
+- **QUALITATIVE OBSERVATION:** the top rows include the forms already noted in P1b (नाई/नाही, त्याले/त्याला, काई/काही) and more (तवा/तेव्हा, हाय/आहे, तुमी/तुम्ही, पायजे/पाहिजे). Several high-count rows are spelling or orthography differences rather than dialect (कि/की, अन्/अन, येशूनं/येशून). Some look like ASR misrecognitions (संग/संघ, माह्या/माया).
+- **Precision of the list as dialect evidence:** PENDING (no native-speaker review).
+- **Limitations:** the published text is unverified against the narration. Every pair depends on the baseline model. Merges/splits are not mined. A single narrator in a single domain.
+- **Next step:** a native speaker fills `standard_marathi` and marks rows as dialect, orthography or ASR error. Measure precision on the top N.

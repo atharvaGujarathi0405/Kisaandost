@@ -132,7 +132,7 @@ Result on a 30-second trimmed sample of audio/JHN_001.mp3
   शब्द सगळ्या जीवनाचा स््रूप "
 
 Qualitative note (not a formal score): recognizably John 1:1-4 in
-Marathi/Varhadi, with at least one visible ASR error near the end ("स््रूप").
+Marathi/Varhadi, with at least one visible ASR error near the end ("स््रूप").      
 
 ------------------------------------------------
 5. PHASE 0 AUDIT (2026-10-04)
