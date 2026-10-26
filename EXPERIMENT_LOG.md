@@ -89,3 +89,38 @@ Every entry records only measured results. Unmeasured = PENDING, unavailable = N
 - **Precision of the list as dialect evidence:** PENDING (no native-speaker review).
 - **Limitations:** the published text is unverified against the narration. Every pair depends on the baseline model. Merges/splits are not mined. A single narrator in a single domain.
 - **Next step:** a native speaker fills `standard_marathi` and marks rows as dialect, orthography or ASR error. Measure precision on the top N.
+
+## P3a: Marathi -> Varhadi pairs by back-translation, and ByT5 fine-tune prepared (not trained)
+
+- **Date:** 2026-10-26
+- **Objective:** Use the local VAHNT Varhadi text to train the Marathi -> Varhadi layer of the bot instead of hand-written swap rules only.
+- **Method:** `scripts/build_mr2vh_pairs.py` sends VAHNT verses to Groq (`openai/gpt-oss-120b`, temperature 0, prompt `bt-v1`) and asks for plain standard Marathi. Pair = (Groq Marathi -> real VAHNT Varhadi). Splits by chapter: test JHN_001, JHN_005, LUK_003, MAT_005, MRK_002; val JHN_002, LUK_004, MAT_006, MRK_003. Filters: Latin letters, length ratio outside 0.6-1.6, Varhadi marker words surviving on the Marathi side (copied, not translated), identical pair.
+- **Data approval:** the user approved sending VAHNT text to Groq on 2026-10-26. VAHNT licence is still unverified (research use only); outputs are gitignored in `data/translation/`.
+- **Model choice check:** on 8 verses `gpt-oss-20b` and `qwen3.8-27b` changed meaning (wrong subject, dropped phrases, invented words) while `gpt-oss-120b` stayed faithful, so only 120b is used. Groq free tier caps each model per day, so 120b throttled after 1,240 verses (about 55 verses/hour afterwards).
+- **Result so far (1,240 of 3,695 verses, JHN and part of LUK):** dropped 33 (copied_varhadi 30, latin 1, length 1, identical 1). train 1,010, val 62, test 135 verses (3 test chapters, 2 val chapters).
+- **Baselines on the 135 held-out verses (WER / CER vs real VAHNT):** Marathi unchanged 0.533 / 0.244; rules only (`varhadify`) 0.406 / 0.190. **Fine-tuned ByT5: PENDING** (not trained).
+- **Trainer:** `experiments/varhadi_adaptation/mr2vh.py` (ByT5-small, `train` / `predict` / `score`). Checked on CPU with a tiny random T5 (train, predict, score all run); the real model, GPU memory and step time are UNMEASURED.
+- **Limitations:** the Marathi side is machine-written, so pairs can carry Groq's paraphrases; the target side is scripture register from one translation team; 3 test chapters, no significance test; no native-speaker review.
+- **Fine-tune run (Colab T4, 2026-10-26):** google/byt5-small, 1,008 train pairs (2 over 1,024 bytes dropped), 62 val, batch 2 x accum 8, lr 1e-4, 10 epochs, seed 13. First attempt at batch 4 ran out of GPU memory (14.5 GB) at step 5. Wall time 72.2 min (about 4.3 s per optimizer step). Validation loss 0.259 (epoch 1) -> 0.1742 (epoch 9, best, kept) -> 0.1745 (epoch 10). Predictions: beam 4, 135 test verses, no length limit beyond 1,024 bytes.
+- **Test result, 135 held-out verses (JHN_001, JHN_005, LUK_003), WER / CER vs real VAHNT, PILOT, no significance test:**
+  - Marathi unchanged 0.533 / 0.244
+  - rules only (varhadify) 0.406 / 0.190
+  - fine-tuned ByT5, raw 0.593 / 0.443 (WORSE than unchanged)
+  - fine-tuned, length-guarded 0.333 / 0.177
+- **Why raw is worse:** 21 outputs fall into repetition loops (the genealogy verses in LUK_003 repeat "X's son was Y"); 19 verses have WER above 1.0. Per-verse median WER is 0.360 for the model against 0.409 for the rules, and the model beats the rules on 86 of 135 verses.
+- **Length guard:** fall back to `varhadify(source)` when output/source character ratio is outside 0.77-1.52 (the min and max of the training pairs). It fired on 22/135 verses (JHN_001 4/51, JHN_005 1/47, LUK_003 17/37). On the other 113 verses: unchanged 0.559 / 0.252, rules 0.425 / 0.194, model 0.336 / 0.179. CAVEAT: the guard was added after seeing the loops, and tested on the same 135 verses, so the guarded number is somewhat optimistic; it needs fresh held-out chapters.
+- **Observed error type:** invented spellings (one output wrote `प्रगाश` where the text has `ऊजीळ`). Not measured systematically.
+- **Not done:** deployment in the bot (model is only in the Colab runtime, ~1.2 GB, CPU speed unmeasured); native-speaker review; farm-domain sentences (data/agri_text has no Varhadi side yet); remaining 2,455 verses (the background back-translation is throttled by Groq, so train was only 1,008 pairs from JHN and part of LUK).
+- **Next step:** save the model (Drive or download), back-translate more verses (MAT, MRK) and retrain; test on fresh chapters; have a native speaker rate model vs rules on farm sentences before it replaces the rules in the bot.
+
+## P3b: Fine-tuned model put in the bot (CPU deployment checks)
+
+- **Date:** 2026-10-26
+- **What:** `bot/mr2vh_model.py` loads the fine-tuned ByT5 from `bot/models/mr2vh/` (gitignored; copy also on the user's Google Drive, My Drive/KisaanDost/mr2vh_model). `to_varhadi()` in `bot/server.py`: LLM Marathi -> per sentence ByT5 -> length guard -> attested-substitution filter -> negation/digit check -> word-swap rules. Any failure falls back to the rules. `KD_MR2VH=0` switches the model off.
+- **Fidelity:** on CPU the model reproduced the Colab GPU output exactly on 11 of 12 verses (beam 4).
+- **Why a word-level filter:** model word changes that appeared in the training pairs matched the real Varhadi 71% of the time (575 changes); changes not in the training pairs matched 21% (152 changes), several of them meaning errors (`माझ्याकडे` -> `माह्यापासून`, `त्याबद्दल` -> `त्यायले`). A test showed one meaning change by the unfiltered model on a bot-style sentence (`हवे असेल` -> `हाय`). The filter keeps the source word instead. Effect on the 135 test verses (beam-4 Colab predictions, verse level, production functions with the length guard, the filter and the negation check): WER 0.339 / CER 0.180, against 0.333 / 0.177 with the length guard alone. The length guard fell back to rules on 22 verses, the negation check on 6 more.
+- **Speed, this PC (8-core CPU, fp32, 133-character sentences):** beam 4 21.5 s per sentence, beam 1 10.7 s; WER 0.338 vs 0.343 on 24 verses, so beam 1 is the default. int8 dynamic quantisation: no speed-up (12.7 s vs 12.5 s) and different outputs, dropped. Model load 8-54 s (disk cache dependent).
+- **End to end (Groq gpt-oss-20b + model, beam 1):** 29 s and 16 s for two farm questions (3-6 sentences each). Too slow for field use on this machine; a GPU host or a faster model is needed.
+- **Quota conflict found:** the Groq free-tier daily cap is per model; the background back-translation job and the bot's default chat model (gpt-oss-120b) share it, so the bot returned 429 until the job was stopped. The job is paused at 1,392 of 3,695 verses (resumable).
+- **Tests:** 104 passed across the whole repository.
+- **Not measured:** quality on farm sentences (no Varhadi farm text exists), native-speaker rating, behaviour on long replies.

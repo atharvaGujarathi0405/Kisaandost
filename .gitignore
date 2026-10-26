@@ -17,3 +17,10 @@ data/private/
 # unverified licence, and native speakers did not consent to public release of their transcripts
 data/transcripts/
 data/evaluation/
+
+data/agri_text/
+
+data/translation/
+
+# fine-tuned Varhadi weights: VAHNT licence unverified, never publish
+bot/models/

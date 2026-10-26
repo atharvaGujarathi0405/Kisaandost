@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="mr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f6b3a">
+<title>किसानदोस्त</title>
+<style>
+:root {
+  --bg: #f4f7f1; --surface: #ffffff; --ink: #1b2a1f; --muted: #5c6b5f; --line: #dbe4d6;
+  --brand: #1f6b3a; --brand-ink: #ffffff; --user: #1f6b3a; --user-ink: #ffffff;
+  --bot: #ffffff; --warn-bg: #fff4d6; --warn-ink: #5a4300; --err: #b3261e; --rec: #c62828;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101612; --surface: #18211b; --ink: #e8efe9; --muted: #9db0a1; --line: #2a3a2f;
+    --brand: #4fb46f; --brand-ink: #08170d; --user: #2f7d4a; --user-ink: #ffffff;
+    --bot: #1d2a21; --warn-bg: #3a3012; --warn-ink: #f3dd9b; --err: #ff8a80; --rec: #ef5350;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101612; --surface: #18211b; --ink: #e8efe9; --muted: #9db0a1; --line: #2a3a2f;
+  --brand: #4fb46f; --brand-ink: #08170d; --user: #2f7d4a; --user-ink: #ffffff;
+  --bot: #1d2a21; --warn-bg: #3a3012; --warn-ink: #f3dd9b; --err: #ff8a80; --rec: #ef5350;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 17px/1.55 "Noto Sans Devanagari", "Nirmala UI", Mukta, system-ui, sans-serif;
+  display: flex; flex-direction: column; height: 100dvh;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+
+header {
+  display: flex; align-items: center; gap: 12px;
+  padding: calc(10px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
+  background: var(--brand); color: var(--brand-ink);
+}
+header h1 { margin: 0; font-size: 1.15rem; line-height: 1.2; }
+header small { display: block; opacity: .85; font-size: .78rem; }
+header .grow { flex: 1; min-width: 0; }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: 0; background: transparent;
+  color: inherit; display: grid; place-items: center; flex: none;
+}
+.icon-btn:active { background: rgba(255,255,255,.18); }
+.icon-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+#log {
+  flex: 1; overflow-y: auto; overscroll-behavior: contain;
+  padding: 16px max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left));
+  display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth;
+}
+.note {
+  background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px;
+  padding: 10px 14px; font-size: .85rem; line-height: 1.45;
+}
+.row { display: flex; gap: 6px; align-items: flex-end; max-width: 100%; }
+.row.user { justify-content: flex-end; }
+.bubble {
+  max-width: 85%; padding: 10px 14px; border-radius: 18px; white-space: pre-wrap;
+  overflow-wrap: anywhere; border: 1px solid var(--line);
+}
+.user .bubble { background: var(--user); color: var(--user-ink); border-color: transparent; border-bottom-right-radius: 6px; }
+.bot .bubble { background: var(--bot); border-bottom-left-radius: 6px; }
+.bubble.error { color: var(--err); border-color: var(--err); }
+.speak { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; flex: none; }
+.speak svg { width: 20px; height: 20px; fill: var(--brand); }
+.speak[aria-pressed="true"] { background: var(--brand); }
+.speak[aria-pressed="true"] svg { fill: var(--brand-ink); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  min-height: 44px; padding: 8px 16px; border-radius: 22px; border: 1px solid var(--brand);
+  background: var(--surface); color: var(--brand); font-weight: 600;
+}
+.chip:active { background: var(--brand); color: var(--brand-ink); }
+
+.typing { display: inline-flex; gap: 5px; padding: 14px 16px; }
+.typing i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite; }
+.typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .typing i { animation: none; opacity: .6; } #log { scroll-behavior: auto; } }
+
+#status { min-height: 22px; padding: 0 16px; font-size: .85rem; color: var(--muted); text-align: center; }
+#status.rec { color: var(--rec); font-weight: 600; }
+
+form {
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 8px max(12px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: var(--surface); border-top: 1px solid var(--line);
+}
+textarea {
+  flex: 1; min-width: 0; resize: none; max-height: 120px; min-height: 48px;
+  padding: 11px 16px; border-radius: 24px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; /* 16px stops iOS zoom */
+}
+.round { width: 52px; height: 52px; border-radius: 50%; border: 0; display: grid; place-items: center; flex: none; background: var(--brand); color: var(--brand-ink); }
+.round svg { width: 26px; height: 26px; fill: currentColor; }
+.round:disabled { opacity: .45; }
+#mic.on { background: var(--rec); animation: pulse 1.2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(198,40,40,.5); } 100% { box-shadow: 0 0 0 16px rgba(198,40,40,0); } }
+@media (prefers-reduced-motion: reduce) { #mic.on { animation: none; } }
+.hidden { display: none !important; }
+
+@media (min-width: 700px) {
+  body { max-width: 640px; margin: 0 auto; border-inline: 1px solid var(--line); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="grow">
+    <h1>किसानदोस्त</h1>
+    <small>शेतीबद्दल काई बी इचारा · प्रायोगिक</small>
+  </div>
+  <button class="icon-btn" id="mute" type="button" aria-label="उत्तर आपोआप वाचून दाखवा" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
+  </button>
+  <button class="icon-btn" id="clear" type="button" aria-label="नवीन गप्पा">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+  </button>
+</header>
+
+<main id="log" aria-live="polite" aria-label="गप्पा"></main>
+<div id="status" role="status"></div>
+
+<form id="form" autocomplete="off">
+  <textarea id="input" rows="1" maxlength="1000" placeholder="इथी लिहा किंवा माइक दाबा" aria-label="तुमचा प्रश्न"></textarea>
+  <button class="round" id="mic" type="button" aria-label="बोलून इचारा">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+  </button>
+  <button class="round" id="send" type="submit" aria-label="पाठवा" disabled>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+  </button>
+</form>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const log = $("log"), input = $("input"), sendBtn = $("send"), micBtn = $("mic"), statusEl = $("status");
+const GREETING = "नमस्कार! मी किसानदोस्त. कपाशी, सोयाबीन, संत्रा, तूर यांच्याबद्दल काई बी इचारा. बोलून किंवा लिहून इचारू शकता.";
+const NOTE = "ही सामान्य माहिती हाय. औषधाचं नाव आन् प्रमाण साठी तुमच्या कृषी सहाय्यकाले इचारा. वऱ्हाडी भाषा अजून तपासलेली नाई.";
+const CHIPS = ["कपाशीवर किडे लागले", "सोयाबीन पेरणी कवा करावी?", "संत्र्याची पानं पिवळी पडली", "तुरीले शेंगा कमी लागल्या"];
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+                set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+
+let history = [];            // [{role, content}]
+let busy = false;
+let autoSpeak = store.get("autoSpeak") !== "0";
+
+/* ---------- rendering ---------- */
+function add(role, text, opts = {}) {
+  const row = document.createElement("div");
+  row.className = "row " + role;
+  const b = document.createElement("div");
+  b.className = "bubble" + (opts.error ? " error" : "");
+  b.textContent = text;                       // textContent: never inject model/user text as HTML
+  row.appendChild(b);
+  if (role === "bot" && !opts.error && "speechSynthesis" in window) {
+    const s = document.createElement("button");
+    s.type = "button"; s.className = "speak"; s.setAttribute("aria-label", "वाचून दाखवा"); s.setAttribute("aria-pressed", "false");
+    s.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12z"/></svg>';
+    s.onclick = () => speak(text, s);
+    row.appendChild(s);
+    row._speakBtn = s;
+  }
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+  return row;
+}
+function chips() {
+  const w = document.createElement("div"); w.className = "chips"; w.id = "chips";
+  CHIPS.forEach((t) => { const c = document.createElement("button"); c.type = "button"; c.className = "chip"; c.textContent = t; c.onclick = () => ask(t); w.appendChild(c); });
+  log.appendChild(w);
+}
+function start() {
+  log.textContent = "";
+  const n = document.createElement("div"); n.className = "note"; n.textContent = NOTE; log.appendChild(n);
+  add("bot", GREETING); chips();
+}
+function typing() {
+  const row = document.createElement("div"); row.className = "row bot";
+  row.innerHTML = '<div class="bubble typing" aria-label="उत्तर लिहितोय"><i></i><i></i><i></i></div>';
+  log.appendChild(row); log.scrollTop = log.scrollHeight; return row;
+}
+
+/* ---------- chat ---------- */
+async function ask(text, fromVoice = false) {
+  text = text.trim();
+  if (!text || busy) return;
+  busy = true; sendBtn.disabled = true;
+  const c = $("chips"); if (c) c.remove();
+  add("user", text); history.push({ role: "user", content: text });
+  input.value = ""; autosize();
+  const t = typing();
+  try {
+    const r = await fetch("/api/chat", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: history.slice(-12) }),
+    });
+    const data = await r.json().catch(() => ({}));
+    t.remove();
+    if (!r.ok) throw new Error(typeof data.detail === "string" ? data.detail : "काई तरी चुकलं, परत ट्राय करा");
+    history.push({ role: "assistant", content: data.reply });
+    const row = add("bot", data.reply);
+    if (autoSpeak && fromVoice && row._speakBtn) speak(data.reply, row._speakBtn);
+    store.set("history", JSON.stringify(history.slice(-12)));
+  } catch (e) {
+    t.remove(); history.pop();                 // drop the unanswered question so history stays alternating
+    add("bot", e.message || "नेटवर्क नाई, परत ट्राय करा", { error: true });
+  } finally {
+    busy = false; sendBtn.disabled = !input.value.trim();
+  }
+}
+$("form").onsubmit = (e) => { e.preventDefault(); ask(input.value); };
+function autosize() { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 120) + "px"; sendBtn.disabled = busy || !input.value.trim(); }
+input.addEventListener("input", autosize);
+input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(input.value); } });
+
+/* ---------- voice out (browser Marathi voice, not a Varhadi voice) ---------- */
+let speakingBtn = null;
+function speak(text, btn) {
+  if (!("speechSynthesis" in window)) return;
+  const was = speakingBtn; speechSynthesis.cancel();
+  if (was) was.setAttribute("aria-pressed", "false");
+  if (was === btn) { speakingBtn = null; return; }
+  const u = new SpeechSynthesisUtterance(text); u.lang = "mr-IN"; u.rate = 0.95;
+  u.onend = u.onerror = () => { btn.setAttribute("aria-pressed", "false"); if (speakingBtn === btn) speakingBtn = null; };
+  speakingBtn = btn; btn.setAttribute("aria-pressed", "true"); speechSynthesis.speak(u);
+}
+const muteBtn = $("mute");
+function paintMute() { muteBtn.setAttribute("aria-pressed", autoSpeak); muteBtn.style.opacity = autoSpeak ? 1 : .5; }
+muteBtn.onclick = () => { autoSpeak = !autoSpeak; store.set("autoSpeak", autoSpeak ? "1" : "0"); if (!autoSpeak) speechSynthesis.cancel(); paintMute(); };
+paintMute();
+if (!("speechSynthesis" in window)) muteBtn.classList.add("hidden");
+
+/* ---------- voice in (browser speech recognition, Marathi model) ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null;
+if (!SR) { micBtn.classList.add("hidden"); input.placeholder = "इथी लिहा"; }
+function setStatus(t, on = false) { statusEl.textContent = t; statusEl.classList.toggle("rec", on); }
+micBtn.onclick = () => {
+  if (rec) { rec.stop(); return; }
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  rec = new SR(); rec.lang = "mr-IN"; rec.interimResults = true; rec.maxAlternatives = 1;
+  let finalText = "", failed = false;
+  rec.onstart = () => { micBtn.classList.add("on"); micBtn.setAttribute("aria-label", "थांबवा"); setStatus("ऐकतोय… बोला", true); };
+  rec.onresult = (e) => {
+    let interim = "";
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      (e.results[i].isFinal ? (finalText += e.results[i][0].transcript) : (interim += e.results[i][0].transcript));
+    }
+    input.value = finalText + interim; autosize();
+  };
+  rec.onerror = (e) => {
+    failed = true;
+    setStatus(e.error === "not-allowed" ? "माइक वापरायची परवानगी द्या" : e.error === "no-speech" ? "काई ऐकू आलं नाई, परत बोला" : "आवाज ओळखता आला नाई, परत ट्राय करा");
+  };
+  rec.onend = () => {
+    micBtn.classList.remove("on"); micBtn.setAttribute("aria-label", "बोलून इचारा"); rec = null;
+    if (!failed) setStatus("");
+    if (finalText.trim()) ask(finalText, true);
+  };
+  rec.start();
+};
+
+/* ---------- misc ---------- */
+$("clear").onclick = () => { if (rec) rec.stop(); speechSynthesis.cancel?.(); history = []; store.set("history", "[]"); setStatus(""); start(); };
+
+try {                                          // restore the last session's turns
+  const saved = JSON.parse(store.get("history") || "[]");
+  if (Array.isArray(saved) && saved.length) {
+    history = saved.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string");
+    const n = document.createElement("div"); n.className = "note"; n.textContent = NOTE; log.appendChild(n);
+    history.forEach((m) => add(m.role === "user" ? "user" : "bot", m.content));
+  } else start();
+} catch { start(); }
+</script>
+</body>
+</html>

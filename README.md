@@ -119,3 +119,21 @@ sample; audio without a row is still transcribed (transcription-only mode), just
 ASR unit tests (`tests/test_asr_*.py`) run with `requirements-asr.txt` installed, use mocked
 audio/CSV fixtures, and never download the model. Run them the same way as the downloader's
 tests: `python -m pytest`.
+## Chat bot (bot/)
+
+Mobile-first web chat. Pipeline: a Groq LLM answers in simple standard Marathi; then, if the fine-tuned
+ByT5 model is installed in `bot/models/mr2vh/` (gitignored, see `docs`/EXPERIMENT_LOG P3a), each sentence is
+converted to Varhadi by it, with a length guard that falls back to the rules; finally `varhadify()` swaps
+whole words for Varhadi forms that occur in the local VAHNT corpus (`bot/varhadi_style.json`).
+Groq models invent Konkani/Malvani endings when asked for Varhadi directly, so they are not asked to.
+The result has not been checked by a native speaker. `KD_MR2VH=0` turns the model off.
+
+```powershell
+python -m pip install -r requirements-bot.txt      # Windows venv
+# GROQ_API_KEY in .env, then:
+python -m uvicorn bot.server:app --reload           # open http://localhost:8000
+python -m pytest tests/test_bot.py
+```
+
+Voice in/out uses the browser's Marathi speech engines (Chrome/Android; needs `localhost` or HTTPS,
+so a phone on plain-http LAN will not get the mic). It does not use the project's IndicConformer ASR yet.
