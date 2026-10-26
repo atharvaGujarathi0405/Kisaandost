@@ -14,6 +14,9 @@ import threading
 from pathlib import Path
 
 MODEL_DIR = Path(os.environ.get("KD_MR2VH_DIR", Path(__file__).resolve().parent / "models" / "mr2vh"))
+# strict (default): keep only word changes seen in training. off: keep all of the model's changes, which gives more
+# dialect but on the pilot test only about 1 in 5 unseen changes matched the real Varhadi. Length and negation guards stay on.
+FILTER = os.environ.get("KD_MR2VH_FILTER", "strict")
 BEAMS = int(os.environ.get("KD_MR2VH_BEAMS", "1"))  # 1 vs 4 beams: 24-verse CPU check WER 0.343 vs 0.338 at half the time
 PREFIX = "mr2vh: "  # must match experiments/varhadi_adaptation/mr2vh.py
 MAX_BYTES = 1024
@@ -136,7 +139,8 @@ def translate_text(text: str, fallback, generate=_generate) -> str:
     for i, pred in zip(todo, generate([parts[i] for i in todo])):
         src, pred = parts[i], pred.strip()
         pred = guard(src, pred, None)
-        pred = None if pred is None else constrain(src, pred, allowed)
+        if pred is not None and FILTER == "strict":
+            pred = constrain(src, pred, allowed)
         parts[i] = pred if pred is not None and negation_ok(src, pred) else fallback(src)
     return "".join(parts)
 

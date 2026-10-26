@@ -124,3 +124,13 @@ Every entry records only measured results. Unmeasured = PENDING, unavailable = N
 - **Quota conflict found:** the Groq free-tier daily cap is per model; the background back-translation job and the bot's default chat model (gpt-oss-120b) share it, so the bot returned 429 until the job was stopped. The job is paused at 1,392 of 3,695 verses (resumable).
 - **Tests:** 104 passed across the whole repository.
 - **Not measured:** quality on farm sentences (no Varhadi farm text exists), native-speaker rating, behaviour on long replies.
+
+## P3c: Why the bot sounded like Marathi, and the data state (2026-10-26)
+
+- **Symptom:** the user said the bot was not speaking Varhadi.
+- **Diagnosis (stage by stage on two farm questions):** the raw ByT5 output did contain Varhadi forms (`हायत`, `ओयखा`, `पानायवर`, `पिकाले`, `अन्`, `असतीन`, `रोगायन`), but the attested-substitution filter (P3b) reverted most of them, because farm vocabulary never occurs in the scripture training pairs. The Groq model also writes long, formal Marathi, and the browser voice is a Marathi voice.
+- **Looser filter tested:** accepting unseen word changes that follow edit patterns seen in training (k >= 3, 5, 10, 20) matched the real Varhadi only 19-20% of the time (91-108 changes), no better than the 21% for all unseen changes. No safe middle setting exists with this data.
+- **Change:** `KD_MR2VH_FILTER=strict` (default) or `off` in `bot/mr2vh_model.py`. `off` keeps all model word changes (length and negation guards stay on). In `off` mode a test reply gave `... अन् ... हाय ... काई ... देसत हाय ... मालूम दे ...`. Some changes there are probably wrong (`-आय-` on non-human nouns such as `लक्षणायबद्दल`; the training data shows it on people only). Not native-speaker checked.
+- **Data state:** back-translation 2,800 of 3,695 verses (JHN 873, LUK 1,117, MAT 749, MRK 61); a second Groq organization's key was used after the first hit its 200,000-token daily cap (the cap refills continuously, about 8,300 tokens an hour). Splits: train 2,382 / val 127 / test 206 (fresh test chapters MAT_005 and MRK_002). A v2 retrain on Colab was started and aborted; nothing from it was saved. The old-model check on the fresh chapters stopped at 30 of 71 verses.
+- **Bot default chat model:** now `openai/gpt-oss-20b`, so the data job can use `gpt-oss-120b` quota.
+- **Next step:** finish the remaining 895 verses, retrain v2, check the length guard and filter on MAT_005/MRK_002, and get farm-domain Varhadi (`data/agri_text/sources.tsv`, 491 sentences) translated by a native speaker.

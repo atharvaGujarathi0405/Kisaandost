@@ -26,7 +26,9 @@ from bot import mr2vh_model
 ROOT = Path(__file__).resolve().parent
 MAX_TURNS = 12  # messages kept per request; the client resends history, the server is stateless
 MAX_CHARS = 1000
-MODEL = os.environ.get("KD_MODEL", "openai/gpt-oss-120b")  # 2026-10-26: 120b/20b/qwen3.8-27b spot-checked; none native-verified
+# 20b by default: Groq free-tier daily caps are per model, and scripts/build_mr2vh_pairs.py uses 120b for training data
+# (sharing it made the bot return 429). The two gave similar Marathi in a spot check; neither is native-verified.
+MODEL = os.environ.get("KD_MODEL", "openai/gpt-oss-20b")
 
 
 def _load_env() -> None:

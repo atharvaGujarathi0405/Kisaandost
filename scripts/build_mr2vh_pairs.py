@@ -100,9 +100,11 @@ def translate(client: groq.Groq, batch: list[dict]) -> tuple[str, dict[int, str]
 
 def backtranslate(limit: int | None) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    client = groq.Groq()
+    client = groq.Groq(api_key=os.environ[os.environ.get("KD_BT_KEY_VAR", "GROQ_API_KEY")])  # which .env key pays for this job
     have = done()
-    todo = [v for v in verses() if v["ref"] not in have][:limit]
+    todo = [v for v in verses() if v["ref"] not in have]
+    todo.sort(key=lambda v: v["chapter"] not in TEST + VAL)  # held-out chapters first: gives fresh test data soonest
+    todo = todo[:limit]
     print(f"{len(have)} done, {len(todo)} to do, models {MODELS}")
     with open(OUT / "backtrans.jsonl", "a", encoding="utf-8") as f:
         for i in range(0, len(todo), BATCH):

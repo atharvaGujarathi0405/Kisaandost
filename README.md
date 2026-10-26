@@ -126,7 +126,7 @@ ByT5 model is installed in `bot/models/mr2vh/` (gitignored, see `docs`/EXPERIMEN
 converted to Varhadi by it, with a length guard that falls back to the rules; finally `varhadify()` swaps
 whole words for Varhadi forms that occur in the local VAHNT corpus (`bot/varhadi_style.json`).
 Groq models invent Konkani/Malvani endings when asked for Varhadi directly, so they are not asked to.
-The result has not been checked by a native speaker. `KD_MR2VH=0` turns the model off.
+The result has not been checked by a native speaker. `KD_MR2VH=0` turns the model off; `KD_MR2VH_FILTER=off` keeps all of its word changes (more dialect, but unseen changes are often wrong); `KD_BT_KEY_VAR` picks the `.env` key the data job uses.
 
 ```powershell
 python -m pip install -r requirements-bot.txt      # Windows venv

@@ -163,3 +163,13 @@ def test_to_varhadi_survives_model_failure(monkeypatch):
         raise RuntimeError("oom")
     monkeypatch.setattr(server.mr2vh_model, "translate_text", boom)
     assert server.to_varhadi("तुम्ही नाही") == "तुमी नाई"
+
+
+def test_filter_off_keeps_unseen_word_changes(monkeypatch):
+    from bot import mr2vh_model as m
+    monkeypatch.setattr(m, "_allowed", lambda: {"pairs": [], "suffixes": []})
+    gen = lambda sents: ["पानायवर डाग"]
+    monkeypatch.setattr(m, "FILTER", "strict")
+    assert m.translate_text("पानांवर डाग", fallback=lambda s: s, generate=gen) == "पानांवर डाग"   # unseen change reverted
+    monkeypatch.setattr(m, "FILTER", "off")
+    assert m.translate_text("पानांवर डाग", fallback=lambda s: s, generate=gen) == "पानायवर डाग"   # kept
