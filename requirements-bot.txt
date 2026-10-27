@@ -6,3 +6,7 @@ httpx>=0.27   # TestClient
 # Optional: the fine-tuned Marathi->Varhadi model (bot/models/mr2vh/). Without it the bot uses word-swap rules only.
 #   pip install torch --index-url https://download.pytorch.org/whl/cpu
 transformers>=4.44,<5
+# Crop photo diagnosis (bot/disease.py)
+timm>=1.0
+pillow>=10
+numpy>=1.26

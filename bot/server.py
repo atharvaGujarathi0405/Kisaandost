@@ -17,18 +17,18 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import groq
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from bot import mr2vh_model
+from bot import disease, mr2vh_model, places, tts, weather
 
 ROOT = Path(__file__).resolve().parent
 MAX_TURNS = 12  # messages kept per request; the client resends history, the server is stateless
 MAX_CHARS = 1000
-# 20b by default: Groq free-tier daily caps are per model, and scripts/build_mr2vh_pairs.py uses 120b for training data
-# (sharing it made the bot return 429). The two gave similar Marathi in a spot check; neither is native-verified.
-MODEL = os.environ.get("KD_MODEL", "openai/gpt-oss-20b")
+# 120b: noticeably better answers than 20b (20b sometimes replied "I did not understand" to a clear question). Groq free-tier
+# caps are per model (200k tokens/day), so do not run scripts/build_mr2vh_pairs.py on the same key while using the bot.
+MODEL = os.environ.get("KD_MODEL", "openai/gpt-oss-120b")
 
 
 def _load_env() -> None:
@@ -88,7 +88,7 @@ LANGUAGE
 
 STYLE
 - Short: at most 4-5 short sentences, because the answer may be read aloud. No tables, no markdown, no emoji.
-- Always give some useful general guidance first (2-3 short points: what to check, safe practice). Ask a follow-up question only if the crop or the problem is truly unknown, and then ask just ONE, after the guidance.
+- Always give some useful general guidance first (2-3 short points: what to check, safe practice). Never reply with only a question or an apology, even when details are missing: give the guidance first. Ask a follow-up question only if the crop or the problem is truly unknown, and then ask just ONE, after the guidance.
 
 SAFETY
 - Never name a pesticide, fungicide, fertiliser brand or give a dose or mixing ratio. Describe only what to check and safe general practice, then send the farmer to the local कृषी सहाय्यक / कृषी विज्ञान केंद्र / PDKV Akola for the exact product and dose.
@@ -105,8 +105,33 @@ class Msg(BaseModel):
     content: str = Field(min_length=1, max_length=MAX_CHARS)
 
 
+class Profile(BaseModel):
+    district: str = Field(max_length=30)
+    taluka: str = Field(max_length=40)
+    village: str = Field(default="", max_length=60)
+    crops: list[str] = Field(default_factory=list, max_length=6)
+
+
 class ChatIn(BaseModel):
     messages: list[Msg] = Field(min_length=1, max_length=50)
+    profile: Profile | None = None
+
+
+def local_weather(place: dict) -> dict | None:
+    try:
+        return weather.fetch(place["lat"], place["lon"])
+    except Exception:  # a weather outage must never stop the farmer's question
+        logging.warning("weather lookup failed", exc_info=True)
+        return None
+
+
+def location_block(profile: Profile | None) -> str:
+    """Validated place + weather for the system prompt ('' when no profile, an unknown place, or nothing to add)."""
+    place = places.resolve(profile.district, profile.taluka, profile.village) if profile else None
+    if not place:
+        return ""
+    w = local_weather(place)
+    return "\n\n" + places.context(place, weather.summary(w) if w else "", profile.crops)
 
 
 def clean_messages(msgs: list[Msg]) -> list[dict]:
@@ -128,6 +153,8 @@ def get_client() -> groq.Groq:
 async def lifespan(_app):
     if mr2vh_model.available():  # load in the background so the first farmer is not the one who waits
         threading.Thread(target=mr2vh_model.load, daemon=True).start()
+    if tts.ENABLED:
+        threading.Thread(target=tts.load, daemon=True).start()
     yield
 
 
@@ -142,7 +169,7 @@ def chat(body: ChatIn, client: groq.Groq = Depends(get_client)):
             model=MODEL,
             max_completion_tokens=2048,  # gpt-oss counts hidden reasoning tokens against this
             temperature=0.3,
-            messages=[{"role": "system", "content": SYSTEM}, *clean_messages(body.messages)],
+            messages=[{"role": "system", "content": SYSTEM + location_block(body.profile)}, *clean_messages(body.messages)],
             **extra,
         )
     except groq.RateLimitError:
@@ -155,6 +182,64 @@ def chat(body: ChatIn, client: groq.Groq = Depends(get_client)):
     if not reply:
         raise HTTPException(502, "काई उत्तर आलं नाई, परत ट्राय करा")
     return {"reply": to_varhadi(reply)}
+
+
+@app.get("/api/places")
+def places_overview():
+    return places.overview()
+
+
+@app.get("/api/places/villages")
+def places_villages(district: str, taluka: str):
+    return places.villages(district, taluka)
+
+
+@app.get("/api/weather")
+def weather_card(district: str, taluka: str, village: str = ""):
+    place = places.resolve(district, taluka, village)
+    if not place:
+        raise HTTPException(404, "unknown place")
+    w = local_weather(place)
+    if not w:
+        raise HTTPException(502, "हवामान आत्ता कळत नाई")
+    return {"summary": weather.summary(w), "advice": weather.advice(w), "days": w["days"], "now": w["now"]}
+
+
+class DiagnoseIn(BaseModel):
+    crop: str = Field(max_length=20)
+    image: str = Field(min_length=100, max_length=8_500_000)  # base64 JPEG, resized in the browser first
+
+
+@app.post("/api/diagnose")
+def diagnose(body: DiagnoseIn):
+    """Photo of a crop leaf -> possible disease and safe advice (never a definite diagnosis, never a product or dose)."""
+    try:
+        return disease.diagnose(body.crop, body.image)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+class TtsIn(BaseModel):
+    text: str = Field(min_length=1, max_length=1500)
+
+
+@app.post("/api/tts")
+def speak(body: TtsIn):
+    """Text -> WAV with the server voice (a Marathi voice; see bot/tts.py). The page falls back to the browser voice on any error."""
+    if not tts.ENABLED:
+        raise HTTPException(503, "server voice is turned off")
+    try:
+        return Response(tts.synthesize(body.text), media_type="audio/wav", headers={"Cache-Control": "no-store"})
+    except ValueError:
+        raise HTTPException(422, "nothing to say")
+    except Exception:
+        logging.exception("tts failed")
+        raise HTTPException(503, "server voice failed")
+
+
+@app.get("/api/tts/info")
+def tts_info():
+    return {"enabled": tts.ENABLED, "engine": tts.engine(), "varhadi_voice": tts.engine().startswith("local:")}
 
 
 # Mounted last so /api/* wins. html=True serves web/index.html at "/".

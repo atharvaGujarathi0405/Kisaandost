@@ -29,6 +29,7 @@ NEGATORS = {"नाही", "नाई", "नका", "नको", "नये", 
 # Suffix swaps the data-derived list proposed but a person judged wrong (-ने is the agent, -ले the dative).
 SUFFIX_VETO = {("ने", "ले")}
 
+_QUOTES = re.compile("[“”\"‘’]")
 _state: dict = {}
 _lock = threading.Lock()
 
@@ -73,18 +74,22 @@ def _ops(a: list[str], b: list[str]):
     return difflib.SequenceMatcher(None, [_core(x) for x in a], [_core(x) for x in b], autojunk=False).get_opcodes()
 
 
-def build_allowed(train_jsonl: Path, out: Path = None, min_count: int = 2) -> dict:
+def build_allowed(train_jsonl: Path, out: Path = None, min_count: int = 2, min_share: float = 0.2) -> dict:
     """Word substitutions (Marathi -> Varhadi) seen at least min_count times in the TRAINING pairs, plus the
     suffix swaps they imply. On the pilot test set, model substitutions found in this list matched the real
-    Varhadi 71% of the time, unlisted ones 21% (and several changed the meaning)."""
-    pairs = collections.Counter()
+    Varhadi 71% of the time, unlisted ones 21% (and several changed the meaning).
+
+    min_share: the change must happen in at least this share of the word's occurrences. It removes alignment noise
+    and context-dependent pairs (का -> कावून, share 0.17, turned "whether" into "because"); WER 0.324 -> 0.328."""
+    pairs, occ = collections.Counter(), collections.Counter()
     for line in train_jsonl.read_text(encoding="utf-8").splitlines():
         r = json.loads(line)
         a, b = r["source"].split(), r["target"].split()
+        occ.update(_core(x) for x in a)
         for op, i1, i2, j1, j2 in _ops(a, b):
             if op == "replace" and i2 - i1 == j2 - j1:
                 pairs.update((_core(x), _core(y)) for x, y in zip(a[i1:i2], b[j1:j2]))
-    allowed = sorted(p for p, c in pairs.items() if c >= min_count)
+    allowed = sorted(p for p, c in pairs.items() if c >= min_count and c / occ[p[0]] >= min_share)
     suf = collections.Counter((x[-2:], y[-2:]) for x, y in allowed if x[:-2] == y[:-2] and len(x) > 3)
     data = {"pairs": [list(p) for p in allowed],
             "suffixes": sorted(list(p) for p, c in suf.items() if c >= 3 and p not in SUFFIX_VETO)}
@@ -96,7 +101,8 @@ def build_allowed(train_jsonl: Path, out: Path = None, min_count: int = 2) -> di
 def constrain(source: str, out: str, allowed: dict) -> str:
     """Keep the model's word changes only if they were seen in training; otherwise keep the source word.
 
-    Inserted, deleted or merged words are kept as the model wrote them (checked only by negation_ok)."""
+    Inserted words are dropped; deleted, merged or split words revert to the source (WER 0.328 / CER 0.165 on 206
+    held-out verses, same accuracy as keeping them, but the output can only contain source words plus attested changes)."""
     pairs = {tuple(p) for p in allowed["pairs"]}
     suffixes = {tuple(p) for p in allowed["suffixes"]}
     a, b = source.split(), out.split()
@@ -107,8 +113,10 @@ def constrain(source: str, out: str, allowed: dict) -> str:
                 cs, ct = _core(s), _core(t)
                 ok = (cs, ct) in pairs or (cs[:-2] == ct[:-2] and (cs[-2:], ct[-2:]) in suffixes)
                 res.append(t if ok else s)
-        else:
+        elif op == "equal":
             res += b[j1:j2]
+        else:  # unequal replace or delete: keep the source words; insert: nothing to keep
+            res += a[i1:i2]
     return " ".join(res)
 
 
@@ -141,6 +149,8 @@ def translate_text(text: str, fallback, generate=_generate) -> str:
         pred = guard(src, pred, None)
         if pred is not None and FILTER == "strict":
             pred = constrain(src, pred, allowed)
+        if pred is not None and not _QUOTES.search(src):
+            pred = _QUOTES.sub("", pred)  # the model learned from verses full of quotes and sometimes adds a stray one
         parts[i] = pred if pred is not None and negation_ok(src, pred) else fallback(src)
     return "".join(parts)
 

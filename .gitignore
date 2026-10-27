@@ -24,3 +24,9 @@ data/translation/
 
 # fine-tuned Varhadi weights: VAHNT licence unverified, never publish
 bot/models/
+
+data/disease_eval/
+
+data/tts_eval/
+data/tts_train/
+data/places_raw/

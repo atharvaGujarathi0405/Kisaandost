@@ -116,6 +116,14 @@ def test_constrain_keeps_only_attested_changes():
     assert m.constrain("देवाने सांगितले", "देवाले सांगितले", ALLOWED) == "देवाने सांगितले"  # ने->ले vetoed/unlisted
 
 
+def test_constrain_reverts_inserts_deletes_and_merges():
+    from bot import mr2vh_model as m
+    A = {"pairs": [["कृषी", "कृषी"]], "suffixes": []}
+    assert m.constrain("पाणी द्या आज", "पाणी आज", A) == "पाणी द्या आज"              # deleted word comes back
+    assert m.constrain("पाणी द्या", "पाणी जरूर द्या", A) == "पाणी द्या"             # inserted word dropped
+    assert m.constrain("पाणी देऊ नका", "पाणीदेऊ नका", A) == "पाणी देऊ नका"         # merge/split reverted
+
+
 def test_negation_and_digits_must_survive():
     from bot import mr2vh_model as m
     assert m.negation_ok("पाणी देऊ नका", "पाणी देऊ नका")
@@ -132,6 +140,16 @@ def test_build_allowed_needs_repeats(tmp_path):
     f.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
     d = m.build_allowed(f)
     assert ["तुम्हाला", "तुमाले"] in d["pairs"] and ["तीन", "चार"] not in d["pairs"]
+
+
+def test_build_allowed_drops_ambiguous_pairs(tmp_path):
+    from bot import mr2vh_model as m
+    f = tmp_path / "train.jsonl"
+    rows = [{"source": "तुम्ही का", "target": "तुमी कावून"}] * 2 + [{"source": "तुम्ही का", "target": "तुमी का"}] * 10
+    f.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    d = m.build_allowed(f)
+    assert ["तुम्ही", "तुमी"] in d["pairs"]          # changes every time
+    assert ["का", "कावून"] not in d["pairs"]         # changes in 2 of 12 occurrences: context dependent
 
 
 def test_translate_text_is_sentence_wise_and_guarded(monkeypatch):
@@ -173,3 +191,12 @@ def test_filter_off_keeps_unseen_word_changes(monkeypatch):
     assert m.translate_text("पानांवर डाग", fallback=lambda s: s, generate=gen) == "पानांवर डाग"   # unseen change reverted
     monkeypatch.setattr(m, "FILTER", "off")
     assert m.translate_text("पानांवर डाग", fallback=lambda s: s, generate=gen) == "पानायवर डाग"   # kept
+
+
+def test_stray_quote_marks_from_the_model_are_removed(monkeypatch):
+    from bot import mr2vh_model as m
+    monkeypatch.setattr(m, "_allowed", lambda: {"pairs": [], "suffixes": []})
+    gen = lambda sents: ["पाने गळतात.”"]
+    assert m.translate_text("पाने गळतात.", fallback=lambda s: s, generate=gen) == "पाने गळतात."
+    gen2 = lambda sents: ["तो म्हणाला “हो”"]
+    assert m.translate_text("तो म्हणाला “हो”", fallback=lambda s: s, generate=gen2) == "तो म्हणाला “हो”"   # quotes in the source are kept

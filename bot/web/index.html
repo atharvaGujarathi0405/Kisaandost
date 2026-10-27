@@ -103,7 +103,43 @@ textarea {
 #mic.on { background: var(--rec); animation: pulse 1.2s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(198,40,40,.5); } 100% { box-shadow: 0 0 0 16px rgba(198,40,40,0); } }
 @media (prefers-reduced-motion: reduce) { #mic.on { animation: none; } }
+.round.alt { background: var(--surface); color: var(--brand); border: 2px solid var(--brand); }
+.sheet { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; z-index: 10; }
+.sheet > div { width: 100%; max-width: 640px; background: var(--surface); border-radius: 20px 20px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); }
+.sheet h2 { margin: 0 0 12px; font-size: 1.05rem; }
+.sheet .crops { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sheet .crops button { min-height: 56px; border-radius: 14px; border: 1px solid var(--brand); background: var(--bg); color: var(--brand); font-weight: 700; font-size: 1.05rem; }
+.sheet .cancel { margin-top: 12px; width: 100%; min-height: 48px; border: 0; background: transparent; color: var(--muted); }
+.thumb { display: block; max-width: 100%; max-height: 180px; border-radius: 12px; margin-bottom: 6px; }
+.card { max-width: 92%; }
+.card h3 { margin: 0 0 4px; font-size: 1.05rem; color: var(--brand); }
+.card .sub { font-size: .8rem; color: var(--muted); margin-bottom: 8px; }
+.card .bar { height: 8px; border-radius: 4px; background: var(--line); margin: 4px 0 8px; overflow: hidden; }
+.card .bar i { display: block; height: 100%; background: var(--brand); }
+.card ul { margin: 6px 0; padding-left: 20px; white-space: normal; }
+.card li { margin-bottom: 4px; }
+.card .alt { font-size: .85rem; color: var(--muted); }
+.card .note { margin-top: 8px; font-size: .82rem; }
 .hidden { display: none !important; }
+
+.gate { position: fixed; inset: 0; z-index: 20; background: var(--bg); overflow-y: auto; }
+.gate form { display: block; max-width: 520px; margin: 0 auto; padding: calc(20px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom)); background: transparent; border: 0; }
+.gate h2 { margin: 0 0 6px; font-size: 1.4rem; color: var(--brand); }
+.gate .hint { margin: 0 0 18px; color: var(--muted); font-size: .92rem; }
+.gate label, .gate legend { display: block; font-weight: 600; margin: 14px 0 6px; padding: 0; }
+.gate input, .gate select { width: 100%; min-height: 52px; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 16px; }
+.gate fieldset { border: 0; margin: 0; padding: 0; }
+.gate .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.gate .opts label { margin: 0; font-weight: 600; }
+.gate .opts input { position: absolute; opacity: 0; width: 1px; min-height: 0; }
+.gate .opts span { display: inline-block; min-height: 44px; padding: 9px 18px; border-radius: 22px; border: 1px solid var(--brand); color: var(--brand); background: var(--surface); }
+.gate .opts input:checked + span { background: var(--brand); color: var(--brand-ink); }
+.gate .opts input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 2px; }
+.gate .primary { width: 100%; min-height: 54px; margin-top: 22px; border: 0; border-radius: 27px; background: var(--brand); color: var(--brand-ink); font-weight: 700; font-size: 1.1rem; }
+.gate .primary:disabled { opacity: .5; }
+.gate .cancel { width: 100%; min-height: 48px; margin-top: 8px; border: 0; background: transparent; color: var(--muted); }
+.gate .credit { margin-top: 18px; font-size: .75rem; color: var(--muted); }
+.gate .err { color: var(--err); min-height: 1.4em; margin: 10px 0 0; }
 
 @media (min-width: 700px) {
   body { max-width: 640px; margin: 0 auto; border-inline: 1px solid var(--line); }
@@ -114,8 +150,11 @@ textarea {
 <header>
   <div class="grow">
     <h1>किसानदोस्त</h1>
-    <small>शेतीबद्दल काई बी इचारा · प्रायोगिक</small>
+    <small id="sub">शेतीबद्दल काई बी इचारा · प्रायोगिक</small>
   </div>
+  <button class="icon-btn" id="where" type="button" aria-label="तुमचं गाव बदला">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+  </button>
   <button class="icon-btn" id="mute" type="button" aria-label="उत्तर आपोआप वाचून दाखवा" aria-pressed="true">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
   </button>
@@ -129,6 +168,11 @@ textarea {
 
 <form id="form" autocomplete="off">
   <textarea id="input" rows="1" maxlength="1000" placeholder="इथी लिहा किंवा माइक दाबा" aria-label="तुमचा प्रश्न"></textarea>
+  <button class="round alt" id="cam" type="button" aria-label="पिकाचा फोटो काढा">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 14a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>
+  </button>
+  <input type="file" id="file" accept="image/*" capture="environment" hidden>
+  <button class="round alt hidden" id="micCancel" type="button" aria-label="रद्द करा"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6z"/></svg></button>
   <button class="round" id="mic" type="button" aria-label="बोलून इचारा">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
   </button>
@@ -137,11 +181,52 @@ textarea {
   </button>
 </form>
 
+<div class="sheet hidden" id="sheet" role="dialog" aria-modal="true" aria-label="पीक निवडा">
+  <div>
+    <h2>कोणत्या पिकाचा फोटो हाय?</h2>
+    <div class="crops">
+      <button type="button" data-crop="cotton">कापूस</button><button type="button" data-crop="soybean">सोयाबीन</button>
+      <button type="button" data-crop="orange">संत्रा</button><button type="button" data-crop="tur">तूर</button>
+    </div>
+    <button type="button" class="cancel" id="sheetCancel">रद्द करा</button>
+  </div>
+</div>
+
+<div class="gate hidden" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <form id="pform" autocomplete="off">
+    <h2 id="gateTitle">तुमची माहिती द्या</h2>
+    <p class="hint">तुमच्या भागातलं हवामान आन् शेतीचा सल्ला द्यायसाठी. ही माहिती तुमच्या फोनमंधीच राहते.</p>
+    <label for="pName">नाव (नाई दिलं तरी चालते)</label>
+    <input id="pName" maxlength="40" autocapitalize="words">
+    <label for="pDist">जिल्हा</label>
+    <select id="pDist" required><option value="">निवडा</option></select>
+    <label for="pTal">तालुका</label>
+    <select id="pTal" required disabled><option value="">आधी जिल्हा निवडा</option></select>
+    <label for="pVil">गाव</label>
+    <input id="pVil" list="vils" maxlength="60" placeholder="यादीतलं निवडा किंवा गावाचं नाव लिहा" disabled>
+    <datalist id="vils"></datalist>
+    <fieldset>
+      <legend>तुमची पिकं (हवी तेवढी निवडा)</legend>
+      <div class="opts" id="pCrops">
+        <label><input type="checkbox" value="cotton"><span>कापूस</span></label>
+        <label><input type="checkbox" value="soybean"><span>सोयाबीन</span></label>
+        <label><input type="checkbox" value="tur"><span>तूर</span></label>
+        <label><input type="checkbox" value="orange"><span>संत्रा</span></label>
+        <label><input type="checkbox" value="paddy"><span>धान</span></label>
+      </div>
+    </fieldset>
+    <p class="err" id="pErr" role="alert"></p>
+    <button class="primary" type="submit" id="pGo" disabled>सुरू करा</button>
+    <button type="button" class="cancel hidden" id="pCancel">रद्द करा</button>
+    <p class="credit">गावांची यादी: OpenStreetMap योगदानकर्ते (ODbL), पूर्ण नाई; तुमचं गाव यादीत नसलं तर लिहा. हवामान: Open-Meteo.com.</p>
+  </form>
+</div>
+
 <script>
-const $ = (id) => document.getElementById(id);
+const $ =(id) => document.getElementById(id);
 const log = $("log"), input = $("input"), sendBtn = $("send"), micBtn = $("mic"), statusEl = $("status");
-const GREETING = "नमस्कार! मी किसानदोस्त. कपाशी, सोयाबीन, संत्रा, तूर यांच्याबद्दल काई बी इचारा. बोलून किंवा लिहून इचारू शकता.";
-const NOTE = "ही सामान्य माहिती हाय. औषधाचं नाव आन् प्रमाण साठी तुमच्या कृषी सहाय्यकाले इचारा. वऱ्हाडी भाषा अजून तपासलेली नाई.";
+const GREETING = "नमस्कार! मी किसानदोस्त. कपाशी, सोयाबीन, संत्रा, तूर यांच्याबद्दल काई बी इचारा. बोलून किंवा लिहून इचारू शकता. पानाचा फोटो पण टाकता येते, कॅमेऱ्याचं बटन दाबा.";
+const NOTE = "ही सामान्य माहिती हाय. औषधाचं नाव आन् प्रमाण साठी तुमच्या कृषी सहाय्यकाले इचारा. वऱ्हाडी भाषा अजून तपासलेली नाई. फोटोवरून फक्त शक्यता कळते, पक्के निदान नाई.";
 const CHIPS = ["कपाशीवर किडे लागले", "सोयाबीन पेरणी कवा करावी?", "संत्र्याची पानं पिवळी पडली", "तुरीले शेंगा कमी लागल्या"];
 const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } },
                 set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
@@ -149,6 +234,9 @@ const store = { get(k) { try { return localStorage.getItem(k); } catch { return 
 let history = [];            // [{role, content}]
 let busy = false;
 let autoSpeak = store.get("autoSpeak") !== "0";
+let profile = null;          // {name, district, taluka, village, crops, dMr, tMr}, kept only in this phone's browser
+try { const p = JSON.parse(store.get("profile") || "null"); if (p && p.district && p.taluka) profile = p; } catch {}
+const profileForApi = () => profile && { district: profile.district, taluka: profile.taluka, village: profile.village || "", crops: profile.crops || [] };
 
 /* ---------- rendering ---------- */
 function add(role, text, opts = {}) {
@@ -158,7 +246,7 @@ function add(role, text, opts = {}) {
   b.className = "bubble" + (opts.error ? " error" : "");
   b.textContent = text;                       // textContent: never inject model/user text as HTML
   row.appendChild(b);
-  if (role === "bot" && !opts.error && "speechSynthesis" in window) {
+  if (role === "bot" && !opts.error) {
     const s = document.createElement("button");
     s.type = "button"; s.className = "speak"; s.setAttribute("aria-label", "वाचून दाखवा"); s.setAttribute("aria-pressed", "false");
     s.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12z"/></svg>';
@@ -172,13 +260,14 @@ function add(role, text, opts = {}) {
 }
 function chips() {
   const w = document.createElement("div"); w.className = "chips"; w.id = "chips";
-  CHIPS.forEach((t) => { const c = document.createElement("button"); c.type = "button"; c.className = "chip"; c.textContent = t; c.onclick = () => ask(t); w.appendChild(c); });
+  (profile ? ["आजचं हवामान कसं हाय?", ...CHIPS] : CHIPS).forEach((t) => { const c = document.createElement("button"); c.type = "button"; c.className = "chip"; c.textContent = t; c.onclick = () => ask(t); w.appendChild(c); });
   log.appendChild(w);
 }
 function start() {
   log.textContent = "";
   const n = document.createElement("div"); n.className = "note"; n.textContent = NOTE; log.appendChild(n);
-  add("bot", GREETING); chips();
+  add("bot", (profile && profile.name ? "नमस्कार " + profile.name + "! " + GREETING.replace(/^नमस्कार!\s*/, "") : GREETING)); chips();
+  showWeather();
 }
 function typing() {
   const row = document.createElement("div"); row.className = "row bot";
@@ -198,7 +287,7 @@ async function ask(text, fromVoice = false) {
   try {
     const r = await fetch("/api/chat", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: history.slice(-12) }),
+      body: JSON.stringify({ messages: history.slice(-12), profile: profileForApi() }),
     });
     const data = await r.json().catch(() => ({}));
     t.remove();
@@ -219,55 +308,271 @@ function autosize() { input.style.height = "auto"; input.style.height = Math.min
 input.addEventListener("input", autosize);
 input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(input.value); } });
 
-/* ---------- voice out (browser Marathi voice, not a Varhadi voice) ---------- */
-let speakingBtn = null;
-function speak(text, btn) {
-  if (!("speechSynthesis" in window)) return;
-  const was = speakingBtn; speechSynthesis.cancel();
-  if (was) was.setAttribute("aria-pressed", "false");
-  if (was === btn) { speakingBtn = null; return; }
-  const u = new SpeechSynthesisUtterance(text); u.lang = "mr-IN"; u.rate = 0.95;
-  u.onend = u.onerror = () => { btn.setAttribute("aria-pressed", "false"); if (speakingBtn === btn) speakingBtn = null; };
-  speakingBtn = btn; btn.setAttribute("aria-pressed", "true"); speechSynthesis.speak(u);
+/* ---------- voice out: server voice (/api/tts) sentence by sentence; the browser's Marathi voice if that fails ---------- */
+/* Both voices are MARATHI voices reading Varhadi text. A Varhadi voice would replace the server model (bot/tts.py). */
+let speakingBtn = null, speakToken = 0, audioEl = null;
+function stopSpeaking() {
+  speakToken++;                                   // any running queue sees a new token and stops
+  if (audioEl) { audioEl.pause(); audioEl = null; }
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  if (speakingBtn) { speakingBtn.setAttribute("aria-pressed", "false"); speakingBtn = null; }
+}
+const fetchWav = (text) => fetch("/api/tts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) })
+  .then((r) => { if (!r.ok) throw new Error("tts " + r.status); return r.blob(); });
+function playBlob(blob) {
+  return new Promise((ok, no) => {
+    const url = URL.createObjectURL(blob), a = new Audio(url); audioEl = a;
+    a.onended = () => { URL.revokeObjectURL(url); ok(); };
+    a.onerror = () => { URL.revokeObjectURL(url); no(new Error("play")); };
+    a.play().catch(no);
+  });
+}
+function browserVoice(text) {
+  return new Promise((ok) => {
+    if (!("speechSynthesis" in window)) return ok();
+    const u = new SpeechSynthesisUtterance(text); u.lang = "mr-IN"; u.rate = 0.95; u.onend = u.onerror = ok; speechSynthesis.speak(u);
+  });
+}
+async function speak(text, btn) {
+  const same = speakingBtn === btn; stopSpeaking(); if (same) return;
+  const mine = speakToken; speakingBtn = btn; btn.setAttribute("aria-pressed", "true");
+  const parts = text.split(/(?<=[.?!।])\s+|\n+/).map((x) => x.trim()).filter(Boolean);
+  let next = parts.length ? fetchWav(parts[0]) : null; if (next) next.catch(() => {});
+  try {
+    for (let i = 0; i < parts.length; i++) {      // fetch sentence i+1 while sentence i is playing
+      let blob = null; try { blob = await next; } catch {}
+      if (mine !== speakToken) return;
+      if (i + 1 < parts.length) { next = fetchWav(parts[i + 1]); next.catch(() => {}); }
+      if (blob) { try { await playBlob(blob); } catch { await browserVoice(parts[i]); } } else await browserVoice(parts[i]);
+      if (mine !== speakToken) return;
+    }
+  } finally { if (mine === speakToken) { btn.setAttribute("aria-pressed", "false"); speakingBtn = null; } }
 }
 const muteBtn = $("mute");
 function paintMute() { muteBtn.setAttribute("aria-pressed", autoSpeak); muteBtn.style.opacity = autoSpeak ? 1 : .5; }
-muteBtn.onclick = () => { autoSpeak = !autoSpeak; store.set("autoSpeak", autoSpeak ? "1" : "0"); if (!autoSpeak) speechSynthesis.cancel(); paintMute(); };
+muteBtn.onclick = () => { autoSpeak = !autoSpeak; store.set("autoSpeak", autoSpeak ? "1" : "0"); if (!autoSpeak) stopSpeaking(); paintMute(); };
 paintMute();
-if (!("speechSynthesis" in window)) muteBtn.classList.add("hidden");
 
-/* ---------- voice in (browser speech recognition, Marathi model) ---------- */
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = null;
-if (!SR) { micBtn.classList.add("hidden"); input.placeholder = "इथी लिहा"; }
+/* ---------- voice in: tap to start, it keeps listening through pauses, tap again to stop and send ---------- */
+/* Browser speech recognition (Marathi model). One recognition session ends by itself at the first pause, so we
+   restart sessions until the farmer taps stop, and keep the text of all of them. */
+const srClass = () => window.SpeechRecognition || window.webkitSpeechRecognition;   // looked up when used
+const MIC_ICON = micBtn.innerHTML, STOP_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>';
+const MAX_REC_MS = 5 * 60 * 1000;      // safety: do not leave the microphone open forever
+let rec = null, rv = null;             // rv = state of the current recording, null when not recording
+if (!srClass()) { micBtn.classList.add("hidden"); input.placeholder = "इथी लिहा"; }
 function setStatus(t, on = false) { statusEl.textContent = t; statusEl.classList.toggle("rec", on); }
-micBtn.onclick = () => {
-  if (rec) { rec.stop(); return; }
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
-  rec = new SR(); rec.lang = "mr-IN"; rec.interimResults = true; rec.maxAlternatives = 1;
-  let finalText = "", failed = false;
-  rec.onstart = () => { micBtn.classList.add("on"); micBtn.setAttribute("aria-label", "थांबवा"); setStatus("ऐकतोय… बोला", true); };
-  rec.onresult = (e) => {
-    let interim = "";
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      (e.results[i].isFinal ? (finalText += e.results[i][0].transcript) : (interim += e.results[i][0].transcript));
-    }
-    input.value = finalText + interim; autosize();
-  };
+const joinText = (a, b) => [a, b].map((x) => (x || "").trim()).filter(Boolean).join(" ");
+
+/* Text of ONE session, rebuilt from every result each time. A result that only extends the previous one replaces it:
+   some Android Chrome versions return cumulative results, which would otherwise repeat words. */
+function sessionText(results) {
+  const parts = [];
+  for (let i = 0; i < results.length; i++) {
+    const t = (results[i][0] && results[i][0].transcript || "").trim();
+    if (!t) continue;
+    const prev = parts[parts.length - 1];
+    if (prev && t.startsWith(prev)) parts[parts.length - 1] = t; else parts.push(t);
+  }
+  return parts.join(" ");
+}
+const ERR = { "not-allowed": "माइक वापरायची परवानगी द्या", "service-not-allowed": "माइक वापरायची परवानगी द्या",
+              "audio-capture": "माइक सापडला नाई", network: "नेटवर्क नाई, आवाज ओळखता आला नाई" };
+function recUI(on) {
+  micBtn.classList.toggle("on", on); micBtn.innerHTML = on ? STOP_ICON : MIC_ICON;
+  micBtn.setAttribute("aria-label", on ? "थांबवा आणि पाठवा" : "बोलून इचारा");
+  [$("cam"), sendBtn].forEach((b) => b.classList.toggle("hidden", on)); $("micCancel").classList.toggle("hidden", !on);
+  input.readOnly = on;
+}
+function showLive() { input.value = joinText(rv.committed, rv.session); autosize(); input.scrollTop = input.scrollHeight; }
+function beginSession() {
+  const mine = rv, R = srClass();
+  rec = new R(); rec.lang = "mr-IN"; rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 1;
+  rec.onresult = (e) => { if (rv !== mine) return; mine.fails = 0; mine.session = sessionText(e.results); showLive(); };
   rec.onerror = (e) => {
-    failed = true;
-    setStatus(e.error === "not-allowed" ? "माइक वापरायची परवानगी द्या" : e.error === "no-speech" ? "काई ऐकू आलं नाई, परत बोला" : "आवाज ओळखता आला नाई, परत ट्राय करा");
+    if (rv !== mine) return;
+    if (e.error === "no-speech" || e.error === "aborted") return;      // normal while waiting: just restart
+    if (ERR[e.error] && e.error !== "network") mine.fatal = e.error; else mine.fails++;
   };
-  rec.onend = () => {
-    micBtn.classList.remove("on"); micBtn.setAttribute("aria-label", "बोलून इचारा"); rec = null;
-    if (!failed) setStatus("");
-    if (finalText.trim()) ask(finalText, true);
+  rec.onend = () => {                                                   // the browser ended this session
+    if (rv !== mine) return;
+    mine.committed = joinText(mine.committed, mine.session); mine.session = "";
+    if (mine.stopping || mine.fatal || mine.fails >= 3 || Date.now() - mine.t0 > MAX_REC_MS) return finishRec();
+    setTimeout(() => { if (rv === mine) beginSession(); }, 150);         // keep listening
   };
-  rec.start();
+  try { rec.start(); } catch { mine.fatal = "audio-capture"; finishRec(); }
+}
+function startRec() {
+  stopSpeaking();
+  rv = { committed: input.value.trim(), prefix: input.value, session: "", stopping: false, cancel: false, fatal: null, fails: 0, t0: Date.now() };
+  recUI(true);
+  const tick = () => { if (!rv) return; const s = Math.floor((Date.now() - rv.t0) / 1000);
+    setStatus(`ऐकतोय… ${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}  बोलून झालं कि थांबवा बटन दाबा, तवा पाठवतो.`, true); };
+  tick(); rv.timer = setInterval(tick, 1000);
+  beginSession();
+}
+function stopRec(cancel = false) {
+  if (!rv) return;
+  rv.stopping = true; rv.cancel = cancel; setStatus(cancel ? "" : "पाठवतोय…", !cancel);
+  const mine = rv;
+  try { rec.stop(); } catch {}
+  setTimeout(() => { if (rv === mine) finishRec(); }, 2500);             // if the browser never reports the end
+}
+function finishRec() {
+  const r = rv; if (!r) return;
+  clearInterval(r.timer); rv = null;
+  try { rec && rec.abort(); } catch {} rec = null;
+  recUI(false);
+  const text = joinText(r.committed, r.session);
+  if (r.cancel) { input.value = r.prefix; autosize(); setStatus(""); return; }
+  if (r.fatal || r.fails >= 3) setStatus(ERR[r.fatal || "network"]); else setStatus("");
+  input.value = text; autosize();
+  if (!text) { if (!r.fatal) setStatus("काई ऐकू आलं नाई, परत बोला"); return; }
+  if (busy) { setStatus("आधीचं उत्तर येतंय. थोड्या येळानं पाठवा बटन दाबा."); return; }
+  ask(text, true);
+}
+micBtn.onclick = () => (rv ? stopRec() : startRec());
+$("micCancel").onclick = () => stopRec(true);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && rv) stopRec(true); });
+
+/* ---------- crop photo -> possible disease ---------- */
+const CROP_NAME = { cotton: "कापूस", soybean: "सोयाबीन", orange: "संत्रा", tur: "तूर" };
+const sheet = $("sheet"), fileIn = $("file");
+let pendingCrop = null;
+$("cam").onclick = () => { if (!busy) sheet.classList.remove("hidden"); };
+$("sheetCancel").onclick = () => sheet.classList.add("hidden");
+sheet.onclick = (e) => { if (e.target === sheet) sheet.classList.add("hidden"); };
+sheet.querySelectorAll("[data-crop]").forEach((b) => b.onclick = () => { pendingCrop = b.dataset.crop; sheet.classList.add("hidden"); fileIn.click(); });
+fileIn.onchange = () => { const f = fileIn.files[0]; fileIn.value = ""; if (f && pendingCrop) diagnose(pendingCrop, f); };
+
+async function shrink(file, max = 1024) {          // phone photos are 5-10 MB: send a ~150 KB JPEG instead
+  let bmp;
+  try { bmp = await createImageBitmap(file, { imageOrientation: "from-image" }); }
+  catch { bmp = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = URL.createObjectURL(file); }); }
+  const w = bmp.width || bmp.naturalWidth, h = bmp.height || bmp.naturalHeight, k = Math.min(1, max / Math.max(w, h));
+  const c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.85);
+}
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function speakBtn(text) {
+  const s = el("button", "speak"); s.type = "button"; s.setAttribute("aria-label", "वाचून दाखवा"); s.setAttribute("aria-pressed", "false");
+  s.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12z"/></svg>';
+  s.onclick = () => speak(text, s); return s;
+}
+function showResult(r) {
+  const row = el("div", "row bot"), card = el("div", "bubble card"); row.appendChild(card);
+  let say = "";
+  if (r.status === "ok") {
+    const t = r.top[0], pct = Math.round(t.p * 100);
+    card.appendChild(el("h3", null, (r.healthy ? "" : "संभाव्य रोग: ") + t.name_mr));
+    card.appendChild(el("div", "sub", t.name_en + " · " + r.crop_mr + " · " + r.possible));
+    const bar = el("div", "bar"); const fill = el("i"); fill.style.width = pct + "%"; bar.appendChild(fill);
+    card.appendChild(bar); card.appendChild(el("div", "sub", "मॉडेलचा गुण " + pct + "% (हा अंदाज चुकू शकतो)"));
+    const ul = el("ul"); r.advice.forEach((x) => ul.appendChild(el("li", null, x))); card.appendChild(ul);
+    card.appendChild(el("div", null, r.common));
+    const alts = r.top.slice(1).filter((x) => x.p >= 0.1);
+    if (alts.length) card.appendChild(el("div", "alt", "इतर शक्यता: " + alts.map((x) => x.name_mr + " " + Math.round(x.p * 100) + "%").join(", ")));
+    if (r.limits) card.appendChild(el("div", "note", r.limits));
+    say = t.name_mr + ". " + r.possible + " " + r.advice.join(" ") + " " + r.common + " " + (r.limits || "");
+  } else {
+    card.appendChild(el("div", null, r.message)); say = r.message;
+    if (r.limits) card.appendChild(el("div", "note", r.limits));
+    if (r.status === "unsure" && r.top) card.appendChild(el("div", "alt", "शक्यता: " + r.top.slice(0, 2).map((x) => x.name_mr + " " + Math.round(x.p * 100) + "%").join(", ")));
+  }
+  const s = speakBtn(say); if (s) { row.appendChild(s); row._speakBtn = s; }
+  log.appendChild(row); log.scrollTop = log.scrollHeight;
+  if (autoSpeak && s) speak(say, s);
+}
+async function diagnose(crop, file) {
+  if (busy) return;
+  busy = true; sendBtn.disabled = true;
+  const c = $("chips"); if (c) c.remove();
+  let dataUrl;
+  try { dataUrl = await shrink(file); } catch { busy = false; add("bot", "हा फोटो उघडता आला नाई. दुसरा फोटो घ्या.", { error: true }); return; }
+  const mine = el("div", "row user"), b = el("div", "bubble"); mine.appendChild(b);
+  const img = el("img", "thumb"); img.src = dataUrl; img.alt = "तुमचा फोटो"; b.appendChild(img); b.appendChild(el("div", null, CROP_NAME[crop] + "चा फोटो"));
+  log.appendChild(mine); log.scrollTop = log.scrollHeight;
+  const t = typing();
+  try {
+    const r = await fetch("/api/diagnose", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ crop, image: dataUrl }) });
+    const data = await r.json().catch(() => ({}));
+    t.remove();
+    if (!r.ok) throw new Error(typeof data.detail === "string" ? "फोटो तपासता आला नाई, परत ट्राय करा" : "काई तरी चुकलं, परत ट्राय करा");
+    showResult(data);
+  } catch (e) { t.remove(); add("bot", e.message || "नेटवर्क नाई, परत ट्राय करा", { error: true }); }
+  finally { busy = false; sendBtn.disabled = !input.value.trim(); }
+}
+
+/* ---------- who and where: the sign-in screen (no password: the details stay in this browser) ---------- */
+const gate = $("gate"), pDist = $("pDist"), pTal = $("pTal"), pVil = $("pVil"), pGo = $("pGo");
+let PLACES = null;
+async function loadPlaces() {
+  if (PLACES) return PLACES;
+  const r = await fetch("/api/places"); if (!r.ok) throw new Error("places");
+  PLACES = await r.json(); return PLACES;
+}
+const opt = (v, t) => { const o = document.createElement("option"); o.value = v; o.textContent = t; return o; };
+function fillTalukas() {
+  const d = (PLACES || []).find((x) => x.en === pDist.value);
+  pTal.textContent = ""; pTal.appendChild(opt("", d ? "निवडा" : "आधी जिल्हा निवडा"));
+  (d ? d.talukas : []).forEach((t) => pTal.appendChild(opt(t.en, t.mr || t.en)));
+  pTal.disabled = !d; pVil.disabled = true; pVil.value = ""; $("vils").textContent = ""; ready();
+}
+async function fillVillages() {
+  pVil.disabled = !pTal.value; $("vils").textContent = ""; ready();
+  if (!pTal.value) return;
+  try {
+    const r = await fetch("/api/places/villages?" + new URLSearchParams({ district: pDist.value, taluka: pTal.value }));
+    const list = r.ok ? await r.json() : [];
+    list.forEach(([mr, en]) => { const o = opt(mr, ""); if (en && en !== mr) o.label = en; $("vils").appendChild(o); });
+  } catch {}
+}
+function ready() { pGo.disabled = !(pDist.value && pTal.value); }
+pDist.onchange = fillTalukas; pTal.onchange = fillVillages;
+async function openGate(canCancel) {
+  $("pErr").textContent = ""; gate.classList.remove("hidden"); $("pCancel").classList.toggle("hidden", !canCancel);
+  try {
+    await loadPlaces();
+    if (pDist.options.length < 2) PLACES.forEach((d) => pDist.appendChild(opt(d.en, d.mr || d.en)));
+    if (profile) {
+      $("pName").value = profile.name || ""; pDist.value = profile.district; fillTalukas(); pTal.value = profile.taluka;
+      await fillVillages(); pVil.value = profile.village || "";
+      document.querySelectorAll("#pCrops input").forEach((c) => c.checked = (profile.crops || []).includes(c.value));
+    }
+  } catch { $("pErr").textContent = "यादी आणता आली नाई. नेटवर्क पाहा आन् पान परत उघडा."; }
+  ready(); $("pName").focus();
+}
+$("pform").onsubmit = (e) => {
+  e.preventDefault(); if (pGo.disabled) return;
+  const lab = (s) => s.options[s.selectedIndex].textContent;
+  profile = { name: $("pName").value.trim(), district: pDist.value, taluka: pTal.value, village: pVil.value.trim(),
+              crops: [...document.querySelectorAll("#pCrops input:checked")].map((c) => c.value), dMr: lab(pDist), tMr: lab(pTal) };
+  store.set("profile", JSON.stringify(profile)); gate.classList.add("hidden"); paintWhere();
+  if (!history.length) start(); else showWeather();
 };
+$("pCancel").onclick = () => gate.classList.add("hidden");
+$("where").onclick = () => openGate(!!profile);
+function paintWhere() { $("sub").textContent = profile ? [profile.village, profile.tMr, profile.dMr].filter(Boolean).join(", ") : "शेतीबद्दल काई बी इचारा · प्रायोगिक"; }
+
+async function showWeather() {
+  if (!profile) return;
+  const old = $("wx"); if (old) old.remove();
+  try {
+    const r = await fetch("/api/weather?" + new URLSearchParams({ district: profile.district, taluka: profile.taluka, village: profile.village || "" }));
+    if (!r.ok) return;                                   // no weather card is better than a wrong one
+    const w = await r.json();
+    const row = el("div", "row bot"), card = el("div", "bubble card"); row.id = "wx"; row.appendChild(card);
+    card.appendChild(el("h3", null, "हवामान · " + (profile.village || profile.tMr)));
+    const ul = el("ul"); w.summary.split("\n").forEach((l) => ul.appendChild(el("li", null, l))); card.appendChild(ul);
+    w.advice.forEach((a) => card.appendChild(el("div", "note", a)));
+    card.appendChild(el("div", "sub", "अंदाज हाय, पक्कं नाई · Open-Meteo.com"));
+    const ch = $("chips"); log.insertBefore(row, ch || null); log.scrollTop = log.scrollHeight;
+  } catch {}
+}
 
 /* ---------- misc ---------- */
-$("clear").onclick = () => { if (rec) rec.stop(); speechSynthesis.cancel?.(); history = []; store.set("history", "[]"); setStatus(""); start(); };
+$("clear").onclick = () => { if (rec) rec.stop(); stopSpeaking(); history = []; store.set("history", "[]"); setStatus(""); start(); };
 
 try {                                          // restore the last session's turns
   const saved = JSON.parse(store.get("history") || "[]");
@@ -275,8 +580,11 @@ try {                                          // restore the last session's tur
     history = saved.filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string");
     const n = document.createElement("div"); n.className = "note"; n.textContent = NOTE; log.appendChild(n);
     history.forEach((m) => add(m.role === "user" ? "user" : "bot", m.content));
+    showWeather();
   } else start();
 } catch { start(); }
+paintWhere();
+if (!profile) openGate(false);
 </script>
 </body>
 </html>

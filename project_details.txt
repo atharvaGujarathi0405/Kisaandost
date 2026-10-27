@@ -1,0 +1,1044 @@
+================================================================================
+KISAANDOST - PROJECT DETAILS (DEMO GUIDE FOR THE MENTOR)
+Voice and photo assistant for Varhadi-speaking farmers of Vidarbha, Maharashtra
+Status as of 27 October 2026.  Author: Atharva Gujarathi.
+================================================================================
+
+HOW TO USE THIS DOCUMENT
+  Part A  (sections 1-3)    The idea, the problem, the whole system on one page.
+  Part B  (sections 4-5)    Every feature: what the user sees, how it works,
+                            which file/function does it, what ML/NLP idea is
+                            used, what numbers we measured, what is NOT done.
+  Part C  (sections 6-7)    All models (trained and pretrained) and a plain-
+                            language glossary of every ML/NLP concept used.
+  Part D  (sections 8-12)   Results table, honest limitations, privacy/licences,
+                            testing, how to run.
+  Part E  (sections 13-16)  A 15-minute demo script, questions the mentor is
+                            likely to ask (with answers), next steps, file map.
+
+Everything marked MEASURED comes from a real run recorded in EXPERIMENT_LOG.md.
+Everything marked NOT DONE / UNVERIFIED is stated openly. We never present an
+automatic output as verified Varhadi.
+
+
+================================================================================
+1. THE PROJECT IN ONE PAGE
+================================================================================
+GOAL
+  A farmer in Vidarbha asks a farming question by voice or text, or sends a
+  photo of a sick leaf, and gets a short, safe answer in Varhadi, shown on the
+  phone screen and read aloud.
+
+THE CORE RESEARCH QUESTION
+  Indian speech models are trained on standard Marathi. Varhadi (a Marathi
+  dialect) has its own word forms. Example: standard "नाही" (not) is "नाई" in
+  Varhadi; "त्याला" (to him) is "त्याले"; "आहे" (is) is "हाय". A standard Marathi
+  model therefore makes systematic mistakes on Varhadi speech.
+  Question: can we measurably reduce those mistakes by adapting a model to
+  Varhadi, using only a small amount of real Varhadi data?
+
+WHY THIS IS HARD (low-resource language problem)
+  - No public Varhadi speech dataset with matching text exists.
+  - No formal Varhadi grammar exists online (we searched).
+  - No Varhadi text about farming exists online.
+  So a large part of the project is building honest data from scratch.
+
+WHAT EXISTS TODAY (all working and tested)
+  1. A baseline speech recogniser run over 706 minutes of Varhadi audio.
+  2. A data pipeline that turns published Varhadi text + audio into aligned
+     training pairs, with a listening/review tool for humans.
+  3. A mobile-first chat assistant (text, voice in, voice out).
+  4. A Marathi->Varhadi conversion layer: hand-checked word rules + a trained
+     neural model (ByT5) with safety checks.
+  5. A crop-photo disease feature for soybean and orange.
+  6. 132 automated tests, an experiment log of every measurement.
+
+BIGGEST OPEN GAPS (said openly in the demo)
+  - No native speaker has verified any Varhadi output yet.
+  - All Varhadi data is scripture (New Testament). No farm-domain Varhadi.
+  - No verified agriculture knowledge base; farm advice is general and unchecked.
+  - Cotton and tur have no photo model.
+  - Replies take 16-23 seconds on a normal PC (the Varhadi model runs on CPU).
+
+
+================================================================================
+2. THE PROBLEM, STEP BY STEP (how we reasoned)
+================================================================================
+Step 1  We found that a pretrained Marathi speech model works but mis-hears
+        Varhadi forms. We needed a measurable baseline: "Experiment A".
+Step 2  To measure, we need Varhadi speech WITH correct text. None existed.
+Step 3  Source: the Varhadi-Nagpuri audio Bible (VAHNT) on bible.com has both
+        audio and published text. The text is per chapter, but we need short
+        clips with exact text -> use forced alignment to find where each verse
+        is spoken.
+Step 4  Aligned text is only a CANDIDATE (the narrator may skip a translator's
+        note, etc.). So a human must verify before it counts as ground truth.
+        0 clips are human-verified so far -> no real baseline error rate yet.
+Step 5  Meanwhile, the assistant needs to speak Varhadi. We could not train a
+        speech model (no verified data, no GPU locally), so we built the
+        text side: an LLM writes plain Marathi and a Marathi->Varhadi layer
+        converts it. That layer is trained on real Varhadi text.
+Step 6  Added a photo feature because farmers' commonest question is "what is
+        wrong with my crop?".
+
+
+================================================================================
+3. THE WHOLE SYSTEM (data flow)
+================================================================================
+ FARMER
+   |  speaks (Marathi/Varhadi)                          sends a leaf photo
+   v                                                      v
+ [Browser speech recognition, mr-IN]                 [Browser: resize to 1024px]
+   |  live text, tap stop to send                       |
+   v                                                      v
+ POST /api/chat  (FastAPI)                           POST /api/diagnose
+   |                                                      |
+   |-- validate input (roles, length, last turn=user)     |-- decode + validate photo
+   |-- Groq LLM (gpt-oss-120b) writes SIMPLE MARATHI       |-- photo checks (size, dark,
+   |       (system prompt: safety + style rules)           |        bright, blurry)
+   |-- Marathi -> Varhadi:                                 |-- crop-specific ConvNeXt
+   |      sentence by sentence ByT5 model                  |      classifier (soybean/orange)
+   |      -> length guard                                  |-- below 60% score -> "unsure"
+   |      -> attested-change filter                        |-- advice from curated JSON
+   |      -> negation/number check                         |      (already in Varhadi)
+   |      -> stray-quote cleanup                           |-- crop warning (e.g. greening)
+   |      -> word-swap rules (92 + 9 words)                |
+   v                                                      v
+ JSON reply  ------------------------------------------>  result card
+   |
+   v
+ Browser shows text, speaker button reads it aloud (Marathi voice)
+
+ OFFLINE (research side, not part of the live app)
+   bible.com audio+text -> ASR baseline -> forced alignment -> triage ->
+   human review -> verified test set -> WER/CER; and
+   VAHNT verses -> back-translation (Groq) -> pairs -> ByT5 fine-tune on Colab.
+
+
+================================================================================
+4. FEATURES, ONE BY ONE
+================================================================================
+Each feature lists:  WHAT / HOW / FILES AND FUNCTIONS / CONCEPTS / NUMBERS /
+LIMITS.
+
+--------------------------------------------------------------------------------
+4.1  DATA COLLECTION: audio downloader (pre-existing part)
+--------------------------------------------------------------------------------
+WHAT   Downloads the Varhadi-Nagpuri New Testament audio, one MP3 per chapter.
+HOW    Playwright (a real Chromium browser) opens the chapter page and observes
+       which audio file the page actually loads; then `requests` downloads that
+       file with the same cookies. Each MP3 is validated (size + MP3 header).
+       Resumable through progress.json / failed.json.
+FILES  downloader.py, browser.py, chapters.py, config.py, progress.py.
+NUMBERS 89 of 260 chapters downloaded: John 21, Luke 24, Matthew 28, Mark 16.
+        706 minutes (about 11.8 hours), about 162 MB.
+LIMITS Scripture speech by an unknown narrator, not farm speech. Licence of the
+       audio is unverified (research use only), so audio/text are never pushed
+       to the public repository.
+
+--------------------------------------------------------------------------------
+4.2  SPEECH RECOGNITION BASELINE (Experiment 0)
+--------------------------------------------------------------------------------
+WHAT   Transcribes the Varhadi audio with a pretrained Marathi model, with NO
+       correction at all, so a later adapted model has a fair baseline.
+MODEL  ai4bharat/indicconformer_stt_mr_hybrid_ctc_rnnt_large (AI4Bharat).
+       Conformer encoder (17 layers, model width 512, 8 attention heads, 4x
+       time subsampling), hybrid CTC + RNN-T decoders, SentencePiece BPE
+       vocabulary of 22 languages x 256 tokens, a separate output layer per
+       language. We decode with the CTC head (greedy).
+HOW    audio -> 16 kHz mono -> 80-dim log-mel features (25 ms window, 10 ms
+       step) -> Conformer encoder -> per-frame token probabilities -> greedy
+       CTC decode (best token per frame, merge repeats, drop blanks).
+FILES  asr_baseline/model.py       load_model, transcribe_one
+       asr_baseline/audio_utils.py load_audio, resample_audio, convert_to_mono,
+                                   validate_audio, ensure_wav_copy
+       asr_baseline/transcribe.py  batch driver with resume (predictions.csv)
+       scripts/run_asr_baseline.py command-line entry
+ENGINEERING FIXES WE HAD TO MAKE
+       - from_pretrained guessed the wrong checkpoint name: we download with
+         huggingface_hub and restore the .nemo file ourselves.
+       - NumPy 2 removed np.sctypes which NeMo still uses: small shim.
+       - NeMo does not install on Windows (pynini): runs in WSL2/Linux.
+CONCEPTS ASR, log-mel spectrogram, Conformer (convolution + self-attention),
+       CTC loss/decoding, subword tokenization, transfer learning (reuse).
+NUMBERS (MEASURED) 89/89 chapters transcribed, 0 failures, 1,771 chunks,
+       689 min of audio in 72.6 min on CPU = about 9.5x faster than real time.
+LIMITS No error rate yet: needs human-verified references (0 so far).
+
+--------------------------------------------------------------------------------
+4.3  LONG-AUDIO CHUNKING
+--------------------------------------------------------------------------------
+WHAT   Lets the model handle 8-minute chapters on a normal PC.
+PROBLEM A whole chapter in one pass ran out of memory (about 6 GB): the
+       Conformer's self-attention memory grows with the SQUARE of input length.
+HOW    Cut the audio into 20-30 s pieces. Each cut is placed at the QUIETEST
+       25 ms frame (lowest RMS energy) between 20 s and 30 s, so it usually
+       falls in a pause between words. Transcribe each piece, join in order.
+       Optional overlap stitching uses the longest common run of words
+       (difflib.SequenceMatcher). Each chunk result is saved to a CSV, so a
+       crash only redoes the unfinished chunks.
+FILES  asr_baseline/chunking.py: ChunkSettings, plan_chunks, stitch,
+       transcribe_chunked.
+NUMBERS (MEASURED) JHN_001: 473.6 s -> 19 chunks, 53.9 s inference, peak memory
+       1.74 GB (was killed at about 6 GB).
+CONCEPTS quadratic attention cost, energy-based voice-activity heuristic,
+       checkpoint/resume.
+
+--------------------------------------------------------------------------------
+4.4  FORCED ALIGNMENT: building (audio, text) pairs without typing text
+--------------------------------------------------------------------------------
+WHAT   Finds, for each verse of the published text, the time span where it is
+       spoken in the audio.
+HOW    1. Fetch the published chapter text (Playwright).
+       2. Run the baseline model only up to its CTC log-probabilities
+          (T frames x V tokens).
+       3. Tokenize the published text.
+       4. Viterbi dynamic programming finds the most likely path through the
+          frames that emits exactly those tokens in order. Audio before the
+          first word and after the last may stay unaligned.
+       5. Group verses into segments of at most about 20 s.
+       Pure NumPy implementation (no alignment library).
+FILES  varhadi_data/vahnt_text.py  parse_chapter_html, fetch_chapter_text
+       varhadi_data/align.py       ctc_align, group_units, chapter_log_probs,
+                                   greedy_text, align_chapter
+       scripts/vahnt_align.py      command-line driver
+CONCEPTS CTC, Viterbi algorithm (dynamic programming), forced alignment,
+       weak supervision (candidate labels, not ground truth).
+NUMBERS (MEASURED) 1,296 candidate segments, 5.54 hours, from 40 of the 89
+       chapters (John 21, Luke 19); 0 failures.
+LIMITS The text is "as published": translator notes in brackets may not be read
+       aloud, so these segments are CANDIDATES only.
+
+--------------------------------------------------------------------------------
+4.5  CONFIDENCE TRIAGE (saves reviewer time, never replaces review)
+--------------------------------------------------------------------------------
+WHAT   Gives each candidate segment a score so a human reviews the most
+       doubtful ones first.
+HOW    confidence = 0.35 x alignment score
+                  + 0.30 x agreement between published text and baseline ASR
+                  + 0.15 x audio quality
+                  + 0.10 x duration plausibility
+                  + 0.10 x speaking-rate plausibility
+                  - penalties for text artifacts (brackets, digits, headings,
+                    repeated words).
+       Labels: HIGH_CONFIDENCE_CANDIDATE (>= 0.90), NEEDS_REVIEW,
+       REJECT_CANDIDATE (< 0.50). All weights live in triage_config.json
+       (version triage-v1). The scoring is rule-based and transparent.
+FILES  varhadi_data/triage.py  load_config, ramp, plateau, audio_signals,
+       text_signals, artifact_flags, score_segment
+       scripts/triage_gold_candidates.py
+NUMBERS (MEASURED) of 1,296: 718 high-confidence, 573 needs review, 5 reject.
+KNOWN BIAS The agreement signal uses the baseline model itself. So triage may
+       ORDER the review but must never SELECT the test set; otherwise we would
+       test only on clips the baseline already gets right.
+
+--------------------------------------------------------------------------------
+4.6  HUMAN REVIEW TOOL AND "GOLD" DATA
+--------------------------------------------------------------------------------
+WHAT   A local web page where a reviewer plays each clip, sees the candidate
+       text and the baseline output, and marks it correct / needs correction
+       (types the right text) / rejected / needs realignment.
+HOW    Python http.server on 127.0.0.1 only; keyboard shortcuts; a verifying
+       decision is accepted only after the clip played to the end and a
+       reviewer ID is given. The original candidate text is never overwritten
+       (corrections live in another column).
+FILES  scripts/review_server.py  clip_wav, ordered, Handler
+       varhadi_data/gold.py      new_row, read_gold, validate_gold,
+                                 write_gold, seed_from_chunks,
+                                 import_alignments, review, export_gold
+       scripts/dataset_tool.py   gold-seed / gold-import / gold-review / export
+STATUS 0 segments verified. Suggested first task for a native speaker:
+       JHN_001 (31 clips, about 8 minutes) -> first real baseline WER/CER.
+
+--------------------------------------------------------------------------------
+4.7  EVALUATION: WER AND CER
+--------------------------------------------------------------------------------
+WHAT   Scores any model against verified reference text.
+DEFINITIONS
+       WER (word error rate) = (substitutions + deletions + insertions)
+                               / number of words in the reference.
+       CER = same at character level (fairer for Devanagari spelling
+       variants).
+HOW    jiwer library; both sides only have punctuation removed, so model A
+       and model B are scored identically. scripts/run_gold_eval.py REFUSES to
+       compute anything when there are 0 verified segments (no made-up
+       numbers). compare.py checks that A and B scored identical segment IDs.
+FILES  asr_baseline/evaluate.py: load_predictions, evaluable_rows,
+       compute_metrics, per_sample_metrics, run_evaluation
+       asr_baseline/error_analysis.py: summarize_errors, edit_operations
+       experiments/evaluation/compare.py
+       scripts/run_gold_eval.py, scripts/generate_asr_report.py
+       scripts/eval_adaptation.py (checks our Varhadi layer against published
+       text, see 4.12)
+
+--------------------------------------------------------------------------------
+4.8  LEXICON MINING
+--------------------------------------------------------------------------------
+WHAT   Lists candidate (Varhadi form, how the Marathi model wrote it) pairs for
+       a native speaker to confirm.
+HOW    For each segment, align the published Varhadi words with the ASR words
+       (difflib word alignment), keep 1:1 substitutions, count them, compute
+       consistency (pair count / all pairs for that word).
+FILES  varhadi_data/lexicon.py: load_pairs, align_tokens, mine
+       scripts/mine_lexicon.py
+NUMBERS (MEASURED) 12,992 substitutions; 345 candidate rows (count >= 3 and
+       consistency >= 0.5). Examples: तवा/तेव्हा, हाय/आहे, तुमी/तुम्ही,
+       पायजे/पाहिजे.
+LIMITS Candidates only; some are spelling differences (कि/की) or ASR mistakes.
+       The standard_marathi column is left EMPTY on purpose for a native
+       speaker.
+
+--------------------------------------------------------------------------------
+4.9  ASR ADAPTATION (PREPARED, NOT TRAINED)
+--------------------------------------------------------------------------------
+WHAT   Everything needed to fine-tune the speech model on Varhadi, so that
+       when verified data exists we can run it.
+HOW    NeMo fine-tune script config (AdamW lr 1e-4, cosine schedule, SpecAugment,
+       batch 8, up to 30 s per clip, best checkpoint by validation WER); data
+       as NeMo JSONL manifests; splits BY CHAPTER (test = JHN_001, val = JHN_002).
+FILES  experiments/varhadi_adaptation/finetune_varhadi.yaml, build_manifests.py,
+       colab_finetune.ipynb, cpu_smoke_test.sh, P2_READY.md
+STATUS NOT READY TO TRAIN: 0 verified test segments, alignment 40/89 chapters.
+       Documented in P2_READY.md with every risk (weak labels, one narrator,
+       forgetting standard Marathi, licence).
+CONCEPTS fine-tuning / transfer learning, SpecAugment, learning-rate schedule,
+       train/val/test split by chapter to avoid leakage.
+
+--------------------------------------------------------------------------------
+4.10  NATIVE-SPEAKER RECORDING TOOLS (built, unused so far)
+--------------------------------------------------------------------------------
+WHAT   Intake for future recordings of real farmers.
+HOW    A CONSENT GATE (no recording without consent); pseudonymous speaker IDs
+       like VH_S001 made with HMAC-SHA256 from a secret salt, so names and phone
+       numbers are never stored; automatic quality flags (clipping, loudness);
+       a withdraw command deletes everything for a speaker; train/val/test
+       split BY SPEAKER with a leakage check.
+FILES  varhadi_data/recordings.py: speaker_id_for, quality_check,
+       register_recording, withdraw_speaker
+       varhadi_data/manifest.py: validate_row, assign_splits, speaker_leaks
+       data/prompts/recording_prompts.csv (farm questions to read/answer)
+CONCEPTS data privacy by design, pseudonymization, speaker-independent splits.
+
+--------------------------------------------------------------------------------
+4.11  THE CHAT ASSISTANT (what the farmer uses)
+--------------------------------------------------------------------------------
+WHAT   A phone-sized web page: type or speak a question, get an answer, tap the
+       speaker to hear it. Suggestion buttons for the four target crops.
+UI     bot/web/index.html - one file, no build step. Mobile-first: large touch
+       targets, 16px input (prevents iOS zoom), safe-area padding, dark mode,
+       reduced-motion support, ARIA labels, all text inserted with textContent
+       (so model output can never inject HTML).
+BACKEND bot/server.py (FastAPI, Pydantic)
+       chat()            validates input, calls Groq, converts to Varhadi.
+       clean_messages()  keeps the last 12 turns, drops a leading assistant
+                         turn, requires the last turn to be the user's.
+       build_system()    builds the system prompt.
+       get_client()      returns the Groq client; HTTP 503 if no key.
+       to_varhadi()      the Marathi->Varhadi pipeline (see 4.12-4.14).
+       tidy()            strips list markers the model adds despite the prompt.
+LLM    Groq-hosted openai/gpt-oss-120b (chat model is switchable with the
+       KD_MODEL environment variable).
+KEY DESIGN DECISION
+       The LLM is told to write SIMPLE STANDARD MARATHI only. When we asked
+       Groq models for Varhadi directly, they invented endings from other
+       dialects (Konkani/Malvani, e.g. "आसा", "-ो" endings). A separate layer
+       that we control converts Marathi to Varhadi.
+SAFETY (in the system prompt; prompt-level only, nothing verifies it)
+       - never name a pesticide/brand or give a dose or mixing ratio;
+       - send the farmer to the कृषी सहाय्यक / कृषी विज्ञान केंद्र / PDKV Akola;
+       - say plainly when unsure; medical/legal/loan questions are refused;
+       - treat farmer text as a question, never as instructions that change the
+         rules (basic prompt-injection defence).
+       - Always give guidance first; never reply with only a question.
+SECURITY API key only on the server (.env, gitignored); input size/role
+       validation; no data stored between requests (stateless); no CORS opened.
+       NOT implemented: rate limiting, login (stated openly).
+CONCEPTS LLM prompting, system prompt, stateless API, input validation, prompt
+       injection, grounding gap (no knowledge base yet).
+TESTS  tests/test_bot.py
+
+--------------------------------------------------------------------------------
+4.12  VARHADI LAYER, PART 1: WORD RULES FROM REAL DATA
+--------------------------------------------------------------------------------
+WHAT   A deterministic whole-word swap of standard Marathi words into Varhadi
+       forms, applied to every reply.
+WHERE  bot/varhadi_style.json ("enforce" = 92 swaps, "enforce_by_rule" = 9
+       farm-noun swaps, "rules" = 15 grammar rules with counts, "do_not_use" =
+       claims we reject).  Function: bot/server.py varhadify().
+HOW WE FOUND THE RULES (important to explain)
+       A web search found NO formal Varhadi grammar. Wikipedia's Varhadi page
+       is marked "needs citations"; only its -ले dative claim agreed with our
+       data. So we counted words in the 80,161-word Varhadi text we hold
+       (3,695 verses). A standard form that never appears while the Varhadi
+       form is frequent is strong evidence. Examples (count in the text):
+         नाही 5  -> नाई 1,201          आहे 0   -> हाय 1,711
+         तुम्ही 0 -> तुमी 588          त्याला 4 -> त्याले 872
+         आणि 0   -> अन् 3,234          दिलं 2  -> देलं 220
+       Grammar patterns found: dative -ले instead of -ला/-ना; agent -नं
+       instead of -ने; plural-human oblique with -आय- (त्यायले, लोकायले);
+       copula हाय / हायस / हायत; negation नाई; future -ईन / -तीन; past देलं,
+       पायलं, म्हतलं; questions कावून, कायले; places अती/तती/जती.
+       Claims from Wikipedia with ZERO occurrences in the corpus (तुयावाला,
+       त्याहिले, थो, अबे, -जो/-जा imperative) are banned in the file.
+EVIDENCE GATE A test (tests/test_bot.py) checks that every swap's Varhadi form
+       occurs in the corpus at least as often as the standard form.
+NUMBERS (MEASURED) applying only these rules to the Marathi model's raw speech
+       output lowered its word error rate against the published text from
+       0.431 to 0.317 (in-sample: the rules were chosen from the same data, so
+       this is optimistic).
+FILES  scripts/eval_adaptation.py measures this; docs/varhadi_adaptation_
+       research.md documents the research.
+LIMITS Scripture register, one translation team; farm words have no corpus
+       evidence; the farm-noun rules are generalisations, not observations.
+
+--------------------------------------------------------------------------------
+4.13  VARHADI LAYER, PART 2: A TRAINED MARATHI->VARHADI MODEL
+--------------------------------------------------------------------------------
+WHAT   A neural translation model that rewrites standard Marathi into Varhadi,
+       learned from real Varhadi text.
+THE DATA PROBLEM A model needs (Marathi, Varhadi) PAIRS, but we only have the
+       Varhadi side.
+SOLUTION BACK-TRANSLATION
+       A Groq LLM rewrites each real Varhadi verse into plain standard
+       Marathi. The pair is (LLM Marathi -> REAL Varhadi), so the target side
+       is genuine Varhadi, and the direction matches the bot (LLM writes
+       Marathi; our model produces Varhadi).
+       scripts/build_mr2vh_pairs.py: backtranslate, translate, keep, build_
+       splits. Quality filters drop pairs where the LLM kept Varhadi words
+       (copied_varhadi), added Latin letters, changed the length too much, or
+       made no change. Model choice check: gpt-oss-20b and qwen3.8-27b changed
+       meaning on test verses, so only gpt-oss-120b is used.
+       Free-tier limits: gpt-oss-120b on the Groq free tier allows 200,000 tokens
+       per day (refilling continuously), which is why the data job took days.
+NUMBERS (MEASURED) 3,695 verses back-translated; 140 dropped (137 copied
+       Varhadi); train 3,222 / validation 127 / test 206 pairs.
+       Splits BY CHAPTER (never by verse):
+         test: JHN_001, JHN_005, LUK_003, MAT_005, MRK_002
+         val : JHN_002, LUK_004, MAT_006, MRK_003
+MODEL  google/byt5-small (about 300 million parameters). ByT5 is a
+       sequence-to-sequence Transformer that works on raw BYTES, not words.
+       Why bytes: no unknown words, and dialect changes are small character
+       edits (ला->ले, ळ->य) which a byte model learns well from little data.
+TRAINING (on Google Colab, free T4 GPU)
+       effective batch 16 (2 x 8 accumulation), learning rate 1e-4, 5 epochs,
+       1,005 steps, 95.5 minutes. Best checkpoint chosen by validation loss:
+       0.2130 -> 0.1897 -> 0.1785 -> 0.1732 -> 0.1719 (epochs 1-5).
+       The first attempt at batch 4 ran out of GPU memory (14.5 GB); we halved
+       the batch. Version 1 (1,008 pairs, 10 epochs) was a pilot; version 3
+       (3,222 pairs) is what the bot uses.
+FILES  experiments/varhadi_adaptation/mr2vh.py: train, predict, score
+       experiments/varhadi_adaptation/mr2vh_colab.ipynb (Colab notebook)
+       bot/mr2vh_model.py (runtime use)
+       The trained weights (1.2 GB) are on the author's Google Drive and local
+       disk; they are NOT in the public repository (licence).
+CONCEPTS sequence-to-sequence, Transformer, byte-level tokenization, transfer
+       learning (ByT5 pretrained, we fine-tune), back-translation, gradient
+       accumulation, learning rate, epochs, validation loss, checkpoint
+       selection, beam search / greedy decoding, held-out test set.
+
+--------------------------------------------------------------------------------
+4.14  SAFETY CHECKS AROUND THE TRAINED MODEL (why the output is trustworthy)
+--------------------------------------------------------------------------------
+A neural model can invent words or repeat itself. In advice for farmers a
+changed word can change the meaning, so every model output passes these checks
+in bot/mr2vh_model.py (all covered by tests):
+ 1. LENGTH GUARD  guard()
+    Without it the model sometimes repeated its last clause until the length
+    limit (21 of 135 verses, e.g. genealogy lists). We compute the ratio of
+    output length to input length and compare to the TRAINING pairs
+    (min 0.77, 99th percentile 1.27, max 1.52). Outside 0.77-1.52, we fall
+    back to the word rules for that sentence.
+ 2. ATTESTED-CHANGE FILTER  build_allowed(), constrain()
+    A model word change is kept only if the same change was seen in training
+    (list built from the training pairs; the change must happen in at least
+    20% of that word's occurrences). Unseen changes are reverted to the source
+    word, as are inserted/deleted/merged words.
+    WHY (MEASURED, independent check on test verses): changes seen in training
+    matched the real Varhadi 71% of the time (575 changes); unseen changes only
+    21% (152 changes) and several altered the meaning, e.g. "माझ्याकडे" (to me)
+    -> "माह्यापासून" (from me); "आहेत का ते पाहा" (check whether) -> "कावून कि"
+    (because). We tested a looser pattern-based rule: still only 19-20%.
+ 3. NEGATION AND NUMBER CHECK  negation_ok()
+    Words like नका / नाही / नको and digits must be neither lost nor added; if
+    they would be, the sentence falls back to the rules.
+ 4. STRAY-QUOTE CLEANUP  The model learned from verses full of quotes and
+    sometimes adds a closing ”; quotes the source did not have are removed.
+ 5. SENTENCE-BY-SENTENCE  translate_text() splits at . ? ! । because training
+    pairs were single verses.
+ 6. FAIL-SAFE  If the model files are missing or an error occurs, the bot
+    silently uses the word rules only (to_varhadi in bot/server.py).
+ TRADE-OFF (explain honestly): with the filter ON ("strict", default) the output
+ stays close to Marathi on farm words, because the model has only seen
+ scripture. KD_MR2VH_FILTER=off shows more dialect, but some of those
+ words are probably wrong. The real fix is farm-domain Varhadi from a native
+ speaker (491 Marathi farm sentences are already collected for translation).
+
+--------------------------------------------------------------------------------
+4.15  VOICE INPUT AND VOICE OUTPUT
+--------------------------------------------------------------------------------
+VOICE IN  Browser Web Speech API (SpeechRecognition, language mr-IN).
+          Recently redesigned (EXPERIMENT_LOG P5): tap to start, it KEEPS
+          LISTENING through pauses (the browser ends a recognition session at
+          the first pause, so the page starts a new one and joins the text),
+          words appear live, a timer shows it is alive, and ONLY a tap on the red
+          stop button sends the question. An X button or the Esc key cancels.
+          Stops by itself after 5 minutes; stops cleanly if the microphone is
+          blocked or the network fails 3 times in a row; merges the repeated
+          results that some Android Chrome versions produce.
+          Checked with a simulated speech engine (5 scenarios). NOT yet tested
+          with a real microphone on a phone.
+VOICE OUT The reply is read aloud by a SERVER voice: facebook/mms-tts-mar (VITS,
+          36M parameters, CC BY-NC 4.0), file bot/tts.py, endpoint POST /api/tts.
+          It reads Devanagari directly but ignores punctuation, so the text is split
+          into sentences/clauses with pauses inserted (380 ms / 170 ms); the page
+          fetches one sentence at a time and prefetches the next, so the first
+          sentence starts after about 5 s. If the server voice fails, the page
+          falls back to the browser's Marathi voice (SpeechSynthesis, mr-IN).
+          IMPORTANT: both are MARATHI voices reading Varhadi spellings, NOT a
+          Varhadi voice. A Varhadi voice has NOT been trained (see EXPERIMENT_LOG
+          P6): the narrator recordings give only 0.98 h of clean clips (3.02 h
+          high-confidence in all), the narrator identity is unknown, and the
+          licence is unverified. A trained voice would be placed in bot/models/tts/
+          and used automatically.
+LIMITS    Needs Chrome/Android and localhost or HTTPS (a phone on plain-http
+          LAN cannot use the microphone). Accuracy on Varhadi words depends on
+          the browser vendor's Marathi model (needs internet). If poor, the
+          alternative is to record the whole clip and transcribe it with Groq
+          Whisper (supports Marathi); not built.
+
+--------------------------------------------------------------------------------
+4.16  CROP PHOTO DISEASE DETECTION (new)
+--------------------------------------------------------------------------------
+WHAT   Farmer taps the camera button, picks the crop (cotton / soybean / orange
+       / tur), takes or chooses a photo and gets: the POSSIBLE disease, the
+       model's score, short safe advice in Varhadi, a warning about what the
+       model cannot recognise, and a speaker button.
+HOW    1. Browser resizes the photo to 1,024 px JPEG (a phone photo is 5-10 MB).
+       2. POST /api/diagnose {crop, image(base64)}.
+       3. load_image(): validates base64, size (<= 6 MB), pixel count
+          (<= 25 MP), real image decode, EXIF rotation; kept in memory only,
+          never saved or logged.
+       4. photo_problems(): too small (< 160 px), too dark / too bright (mean
+          grey), blurry (variance of the Laplacian on a 256 px grey copy;
+          threshold 15 calibrated on 128 public leaf photos: no sharp photo
+          scored below 16.7).
+       5. predict(): crop-specific ConvNeXt-Small classifier -> top-3 classes
+          with softmax scores.
+       6. Score below 0.60 -> "not sure, take a clearer photo".
+       7. Advice comes from bot/disease_guidance.json (written once, converted
+          to Varhadi once by scripts/build_disease_guidance.py with our
+          trained model, so replies are instant and a reviewer can read exactly
+          what farmers will see).
+MODELS (not trained by us; downloaded from Hugging Face, CC BY 4.0, credit
+       "Multi-crop disease models, IXR (agritechixr)" and the LeafNet dataset)
+         soybean: ixrbhii/soybean-disease-convnext - 6 classes (Downy Mildew,
+                  Frogeye Leaf Spot, Healthy, Mosaic Virus, Rust, Septoria
+                  Brown Spot)
+         orange : ixrbhii/citrus-disease-convnext - 8 classes (Bacterial
+                  Blight, Black Spot, Canker, Dry Leaf, Healthy, Leaf Curl
+                  Virus, Sooty Mould, Spider Mites)
+       ConvNeXt-Small (about 50 million parameters), a modern convolutional
+       network pretrained on ImageNet-22k, then fine-tuned by its authors.
+       Model cards report 91.7% (soybean) and 99.5% (orange) on their OWN
+       held-out photos and warn field photos score lower.
+OUR INDEPENDENT TEST (MEASURED, public Indian photos the models were not
+       tested on; 294 soybean photos, 253 citrus photos):
+         Septoria brown spot (soybean)   65/71 correct (92%)
+         Canker (citrus)                 77/80 correct (96%)
+         Black spot (citrus)             56/64 correct (88%)
+         Healthy leaves                  soybean 38/72 called healthy (29 called
+                                         a disease at >= 45% confidence);
+                                         citrus 16/26 called healthy
+         Diseases NOT in the model       confidently misnamed: soybean 97/151
+                                         at >= 45%; CITRUS GREENING (a major
+                                         Nagpur orange disease): 67 of 73
+                                         photos called "Black Spot".
+       KEY POINT FOR THE MENTOR: this is a CLOSED-SET classifier. It always
+       names one of its own classes, so a high score does not prove it is
+       right about an unknown disease.
+GUARDRAILS WE ADDED BECAUSE OF THESE NUMBERS
+       - confidence bar raised 0.45 -> 0.60 (precision on known diseases:
+         soybean 73% -> 76%, orange 88% -> 91%);
+       - a "Healthy" result is shown as "could not recognise a disease; this
+         does not prove the crop is healthy" (healthy calls were wrong about
+         half the time);
+       - every orange result carries a warning that greening symptoms (yellow
+         mottled leaves, small lopsided fruit) are NOT recognised;
+       - every soybean result lists the six diseases it knows;
+       - the score is labelled "the model's score, can be wrong";
+       - always "possible", never a definite diagnosis; no pesticide names or
+         doses (a test checks the guidance text for doses and chemical names).
+NOT SUPPORTED YET  Cotton (no model; public data exists: Project-AgML cotton
+       leaf dataset, 1,373 raw photos, 5 classes, CC BY-NC 4.0 - fine for this
+       academic project, not commercial) and tur (no public disease dataset).
+       Both show an honest "not available yet" message.
+GUIDANCE TEXT  Written by us from general crop-protection practice because the
+       public Q&A dataset had only empty placeholder rows for soybean and
+       citrus. NOT checked by an agronomist.
+FILES  bot/disease.py: supported, load_image, photo_problems, predict, diagnose
+       bot/disease_guidance.json, scripts/build_disease_guidance.py
+       tests/test_disease.py (13 tests)
+CONCEPTS image classification, CNN/ConvNeXt, ImageNet pretraining and transfer
+       learning, softmax scores and over-confidence, closed-set vs open-set
+       recognition, precision/recall, out-of-distribution inputs, domain shift
+       (lab photos vs field photos), image quality checks (Laplacian blur).
+
+
+4.17  FARMER PROFILE, LOCAL WEATHER AND REGION (new)
+WHAT   A first-launch screen asks district -> taluka -> village (+ optional name,
+       crops). It is not a real login: no password, no phone number; the details
+       stay in the phone's browser. Every question carries the place, so the bot
+       can answer for THIS farmer's area.
+HOW    bot/places.py validates district/taluka against bot/places.json (11 Vidarbha
+       districts, 120 talukas, ~13,000 places built from OpenStreetMap with
+       scripts/build_vidarbha_places.py). bot/weather.py asks Open-Meteo for the
+       4-day forecast at the village (or taluka centre) and caches it 30 minutes.
+       The model's prompt gets: location, crops, weather numbers, and the PDKV Akola
+       agro-climatic zone (Western 700-950 mm, Central 950-1250 mm, Eastern
+       1250-1700 mm rainfall; main crops). Rain/heat tips are plain rules, never a
+       product or dose. A weather outage never blocks a question.
+SAFETY village/name text is stripped to letters/digits before it reaches the prompt
+       (prompt-injection guard); district/taluka must exist; crops must be in a fixed
+       list. Soil is only described generally; the bot points to the Soil Health Card.
+LIMITS OpenStreetMap is incomplete (typed villages still work, weather then uses the
+       taluka centre); village names are mostly Roman script; the weather grid is
+       ~10 km; zone/soil text is general, not agronomist-checked.
+FILES  bot/places.py, bot/weather.py, bot/places.json, scripts/build_vidarbha_places.py,
+       tests/test_places.py (6 tests), the sign-in sheet and weather card in
+       bot/web/index.html
+CONCEPTS geospatial hierarchy (district/taluka/village), geocoding via open data,
+       API caching with a TTL, grounding an LLM with retrieved context (RAG-lite),
+       prompt-injection hygiene, graceful degradation.
+
+
+================================================================================
+5. THE EXPERIMENTS IN ORDER (same names as EXPERIMENT_LOG.md)
+================================================================================
+ Exp 0.1  single 30 s sample transcribed (raw baseline)
+ Exp 0.2  chunked inference on a full chapter (memory 6 GB -> 1.74 GB)
+ P1b      forced alignment pilot on John 1 (31 segments)
+ Exp 0.3  raw baseline over all 89 chapters (0 failures)
+ P1c      gold review workflow and evaluation pipeline
+ P1d      confidence triage on 1,296 candidates
+ P1e      lexicon mining (345 candidate rows)
+ P3a      Marathi->Varhadi pairs by back-translation + first ByT5 pilot (v1)
+ P3b      model put in the bot; CPU speed; attested-change filter found
+ P3c      why the bot sounded like Marathi (filter reverted dialect words)
+ P3d      v3 fine-tune on all data (3,222 pairs)
+ P3e      v3 installed; filter tightened (min share, no unseen edits)
+ P4       crop photo diagnosis; independent test; guardrails
+ P5       microphone redesign
+ (P2 = ASR adaptation is PREPARED but not run: needs verified data.)
+
+
+================================================================================
+6. ALL MODELS IN ONE TABLE
+================================================================================
+ Model                         What it does              Trained by   Where it runs
+ ----------------------------  ------------------------  -----------  ---------------
+ IndicConformer (Marathi ASR)  speech -> Marathi text    AI4Bharat    WSL2 CPU (offline research)
+ gpt-oss-120b (LLM)            writes Marathi answers    OpenAI (hosted by Groq)  Groq cloud API
+ ByT5-small FINE-TUNED v3      Marathi -> Varhadi        us (Colab T4) local CPU, in the bot
+ ConvNeXt-Small soybean        leaf photo -> disease     IXR authors  local CPU, in the bot
+ ConvNeXt-Small citrus         leaf photo -> disease     IXR authors  local CPU, in the bot
+ Browser speech recogniser     speech -> text (live)     browser      user's browser (cloud)
+ MMS-TTS Marathi (VITS)       text -> speech (Marathi)  Meta         local CPU, in the bot
+ Browser speech synthesis      fallback voice            browser      user's device
+ Word rules (92 + 9)           Marathi -> Varhadi words  by us, from  local code
+                                                         data counts
+ Not yet trained: Varhadi-adapted ASR, Varhadi text-to-speech voice, cotton photo model.
+
+ Models WE trained/fine-tuned ourselves:  the Marathi->Varhadi ByT5 (v1 pilot
+ and v3).  Everything else is a pretrained model used as-is or a rule system
+ built from our data.
+
+
+================================================================================
+7. ML / NLP CONCEPTS - PLAIN-LANGUAGE GLOSSARY
+================================================================================
+(Use these to answer "what is X?" in the demo.)
+
+SPEECH
+ ASR - Automatic Speech Recognition: audio -> text.
+ Log-mel spectrogram - a picture of how much energy each frequency band has
+   every 10 ms; the model "looks" at this, not the raw waveform.
+ Conformer - a neural network that combines convolution (local sound patterns)
+   with self-attention (long-range context).
+ CTC (Connectionist Temporal Classification) - a way to train and decode a
+   model where the audio is longer than the text: per frame it predicts a token
+   or a "blank"; repeats and blanks are removed to get the text.
+ Greedy decoding - take the single best token per step. Beam search keeps the
+   best several candidates (slower, slightly better).
+ Subword tokenization (BPE/SentencePiece) - words split into frequent pieces.
+ Forced alignment - given audio AND its text, find when each word is spoken.
+ Viterbi algorithm - dynamic programming that finds the best path through a
+   grid of probabilities.
+ Self-attention memory cost - grows with length squared; why long audio must be
+   chunked.
+
+EVALUATION
+ WER / CER - error rates at word / character level (see 4.7). Lower is better.
+ Substitution, deletion, insertion - the three kinds of error counted.
+ Held-out test set - data never used in training or tuning.
+ Train / validation / test split - train to learn, validation to choose the
+   best checkpoint, test to report the final number once.
+ Data leakage - test data accidentally seen in training (we split by CHAPTER,
+   and by SPEAKER for future recordings, to avoid it).
+ Precision / recall - of the answers given, how many were right / of the true
+   cases, how many were found.
+ In-sample vs out-of-sample - a number measured on the same data used to choose
+   the rules is optimistic; we say so.
+ Significance test - checks the difference is not luck; NOT done (pilot sizes).
+
+TRAINING
+ Transfer learning / fine-tuning - start from a model that already learned
+   general patterns and train a little more on our small data.
+ Epoch, step, batch - one pass over the data; one weight update; samples per
+   update. Gradient accumulation = add up several small batches before one
+   update (lets a small GPU act like a bigger batch).
+ Learning rate - size of each weight update.
+ Loss / validation loss - the error the optimiser reduces; validation loss is
+   measured on data not trained on (lower is better; used to pick a checkpoint).
+ Overfitting - the model memorises training data and does worse on new data.
+ Catastrophic forgetting - fine-tuning on narrow data can make a model forget
+   its general skill (a stated risk for ASR adaptation).
+ Weak supervision / weak labels - labels that are probably right but not
+   verified (our aligned candidates).
+ Back-translation - create training pairs by translating the target side
+   backwards with another model; the target side stays real.
+ Seq2seq (sequence-to-sequence) - a model that reads one sequence and writes
+   another (translation).
+ Transformer - the attention-based architecture behind modern language models.
+ Byte-level model (ByT5) - reads UTF-8 bytes instead of words: no unknown
+   words; good for spelling/dialect edits.
+ Pretraining - the large general training done before our fine-tune.
+
+LANGUAGE MODELS AND NLP
+ LLM - large language model (here: gpt-oss-120b).
+ System prompt - fixed instructions given to the LLM before the user's text.
+ Prompt injection - text that tries to override the rules; we tell the model
+   to treat farmer text only as a question.
+ Hallucination - fluent but invented output (the Groq models inventing dialect
+   forms; the ByT5 model inventing spellings). Why we added guards.
+ Normalisation - mapping dialect forms to a standard form (planned reverse
+   direction for search over standard-Marathi documents).
+ Lexicon - a word list (our 92 + 9 swaps; the 345 mined candidates).
+ Rule-based vs learned systems - rules are exact and explainable but cover few
+   words; learned models generalise but can be wrong. We combine them and let
+   the rules have the last word on common function words.
+ RAG (retrieval-augmented generation) - answering from retrieved trusted
+   documents; PLANNED, not built (no verified knowledge base yet).
+ Low-resource language - little digital text/speech exists for it.
+
+VISION
+ Image classification - one label per image.
+ CNN / ConvNeXt - convolutional networks that learn visual patterns; ConvNeXt
+   is a modern design.
+ ImageNet pretraining - the network first learned general vision on millions of
+   photos.
+ Softmax score - the model's confidence-like number (0-1) across classes; it is
+   often over-confident.
+ Closed-set vs open-set - closed-set always picks a known class even for an
+   unknown disease (our greening finding).
+ Domain shift - photos from the field look different from the training photos.
+ Laplacian variance - a quick sharpness measure: sharp edges give high variance.
+
+SOFTWARE / DEPLOYMENT
+ REST API (FastAPI) - the page talks to the server with JSON over HTTP.
+ Stateless - the server remembers nothing between requests.
+ Lazy loading - the big model loads only when first needed (and in the
+   background at start-up).
+ Fallback - if a check fails, use the simpler safe method.
+ Pseudonymization (HMAC) - replace identity with a keyed hash.
+ Web Speech API - the browser's built-in speech recognition and synthesis.
+
+
+================================================================================
+8. RESULTS TABLE (everything measured)
+================================================================================
+SPEECH BASELINE
+  89 chapters, 705.9 min audio; 689 min transcribed in 72.6 min (about 9.5x
+  real time); 0 failures; peak memory 1.74 GB with chunking.
+  Error rate vs verified text: NOT AVAILABLE (0 verified segments).
+
+DATA
+  Aligned candidates 1,296 segments / 5.54 h / 40 chapters; triage 718 / 573 / 5.
+  Lexicon candidates 345.
+  Marathi->Varhadi pairs: 3,695 verses back-translated -> train 3,222 /
+  val 127 / test 206.
+
+MARATHI -> VARHADI (206 held-out verses from 5 chapters; WER / CER vs real
+Varhadi text; lower is better; PILOT, no significance test)
+  Marathi text unchanged ........................ 0.539 / 0.248
+  Word rules only ............................... 0.405 / 0.188
+  ByT5 v3, raw output ........................... 0.396 / 0.260
+  ByT5 v3 + length guard + negation check ....... 0.324 / 0.168  (filter off)
+  ByT5 v3 + all safeguards (bot default) ........ 0.328 / 0.165
+  Earlier pilot (v1, 135 verses): rules 0.406 / 0.190; v1 + safeguards 0.339 / 0.180.
+  Fresh chapters never seen by v1 (MAT_005 + MRK_002, 71 verses): rules
+  0.402 / 0.186; v1 with safeguards 0.350 / 0.182; v3 about 0.335 / 0.177.
+  Length guard fell back on 15 of 206 verses (v1: 22 of 135).
+  Rules applied to the Marathi ASR's raw output (vs published text): 0.431 -> 0.317
+  (in-sample, optimistic).
+
+SPEED (this PC, 8-core CPU, no GPU)
+  ByT5: 10.7 s per 133-character sentence with 1 beam, 21.5 s with 4 beams
+  (accuracy 0.343 vs 0.338); 8-bit compression gave no speed-up.
+  Full assistant reply (Groq + CPU model): 16-23 s.
+
+PHOTO DIAGNOSIS (independent public photos): see section 4.16.
+
+TESTS
+  132 automated tests pass (model/network calls mocked).
+
+
+================================================================================
+9. LIMITATIONS (say these before the mentor asks)
+================================================================================
+ 1. NO NATIVE-SPEAKER VERIFICATION of any Varhadi output, rule, model output,
+    or guidance text. Every "Varhadi" claim is "unverified".
+ 2. DATA DOMAIN: scripture from one translation team; no farm speech or farm
+    text. Results say nothing yet about everyday farm sentences.
+ 3. MARATHI SIDE OF PAIRS is machine-written (Groq), so pairs can carry its
+    paraphrases.
+ 4. PILOT SIZE: 5 test chapters, no significance test. The length guard was
+    designed after seeing the failures and first measured on the same verses
+    (then re-checked on chapters unseen by that model).
+ 5. MEANING RISK: even with filters, converting advice could alter meaning; the
+    model invents spellings sometimes (e.g. "प्रगाश").
+ 6. FARM ADVICE UNVERIFIED: the LLM answers from general knowledge (some
+    suggestions looked doubtful); the photo advice is our own write-up. No
+    agronomist review; no ICAR/PDKV knowledge base.
+ 7. VOICE: Marathi voices (server model and browser fallback), not Varhadi; speech recognition accuracy on
+    Varhadi unmeasured; not tested on a real phone microphone.
+ 8. PHOTO MODELS: closed-set, over-confident on unknown diseases, weak on
+    healthy leaves; tested only on public dataset photos, not Vidarbha field
+    photos; no cotton or tur model.
+ 9. SPEED: 16-23 s per reply on CPU.
+10. NO RATE LIMITING / LOGIN on the API (fine for a demo, not for deployment).
+11. FREE-TIER LIMITS: Groq's per-model daily token cap (200,000) shaped the
+    work; a paid tier would remove it.
+
+
+================================================================================
+10. PRIVACY, SECURITY AND LICENCES
+================================================================================
+ - The GitHub repository is PUBLIC. Audio, transcripts, translation pairs,
+   photos used for testing, model weights and .env are all in .gitignore.
+ - VAHNT audio/text licence is UNVERIFIED (research use only): the trained
+   model is not published; data stays local; the text was sent to Groq (for
+   back-translation) and Google Colab/Drive (for training/storage) with the
+   author's approval.
+ - Photo model licences: CC BY 4.0 (credit given in README). Cotton dataset
+   (planned): CC BY-NC 4.0 (non-commercial: fine for this academic project).
+ - API keys only in .env on the server; never sent to the browser.
+ - Uploaded photos are processed in memory and never stored or logged.
+ - Speaker recordings (future): consent gate, pseudonymous IDs (HMAC-SHA256),
+   withdraw-speaker command.
+ - Advice never contains pesticide names or doses (enforced by a test on the
+   guidance text) and always refers to the local agriculture officer / KVK.
+
+
+================================================================================
+11. TESTING
+================================================================================
+ 132 tests (pytest, all offline, models mocked):
+   tests/test_bot.py            chat endpoint, validation, rules, evidence gate
+                                (every rule's Varhadi form must occur in the
+                                corpus), model filters, negation/quote checks
+   tests/test_mr2vh_pairs.py    pair-building filters, chapter-level splits
+                                (no held-out chapter in training)
+   tests/test_disease.py        photo checks, ok/unsure/bad-photo/unsupported
+                                paths, no doses/chemical names in advice, all
+                                model labels have guidance, endpoint
+   tests/test_asr_*.py, test_dataset.py, test_triage.py, test_lexicon.py,
+   test_review_server.py, test_gold_eval.py, test_vahnt_align.py,
+   test_build_manifests.py, test_downloader.py   research pipeline
+ Run:  python -m pytest -q
+
+
+================================================================================
+12. HOW TO RUN
+================================================================================
+ One-time:
+   python -m pip install -r requirements-bot.txt
+   # torch CPU build for the Varhadi model and photo model:
+   pip install torch --index-url https://download.pytorch.org/whl/cpu
+   # put GROQ_API_KEY in .env
+ Start the demo:
+   python -m uvicorn bot.server:app --host 127.0.0.1 --port 8000
+   open http://127.0.0.1:8000
+ Useful switches (environment variables):
+   KD_MODEL=openai/gpt-oss-20b     smaller/other Groq chat model (separate quota)
+   KD_MR2VH=0                      turn the Varhadi model off (fast, rules only)
+   KD_MR2VH_FILTER=off             more dialect, less safe
+   KD_MR2VH_BEAMS=4                better, slower
+ Research commands:
+   python -m scripts.build_mr2vh_pairs              build/resume the pair data
+   python experiments/varhadi_adaptation/mr2vh.py score --data data/translation --pred <file>
+   python -m scripts.build_disease_guidance          refresh Varhadi advice text
+   python -m scripts.eval_adaptation                 check rules vs published text
+   python scripts/review_server.py                   listening/review tool
+
+
+================================================================================
+13. SUGGESTED 15-MINUTE DEMO SCRIPT
+================================================================================
+ Before the meeting: start the server; keep the Colab results and
+ EXPERIMENT_LOG.md open; set KD_MR2VH=0 if the room's laptop is slow.
+
+ 0:00  The problem (section 1): Marathi models mishear Varhadi. Show the
+       three examples नाही/नाई, आहे/हाय, त्याला/त्याले.
+ 2:00  Data (4.4-4.6): explain forced alignment in one sentence, show
+       EXPERIMENT_LOG numbers (1,296 segments, 0 verified) and say why we did
+       not invent a WER.
+ 4:00  The assistant: open the page at phone width. Tap a suggestion chip or
+       type "माझ्या कपाशीवर किडे लागले, काय करू?". While it loads (15-20 s),
+       explain the pipeline: LLM -> Marathi -> ByT5 -> safety checks -> rules.
+ 6:00  Show the result: Varhadi forms (हाय, अन्, तुमी, ...). Then show the
+       checks: say what the length guard / attested-change filter / negation
+       check do and why (71% vs 21%).
+ 8:00  Voice: tap the mic, speak a long question with pauses, show live text,
+       tap stop to send. Tap the speaker button; say plainly it is a Marathi
+       voice.
+10:00  Photo: camera button -> choose soybean -> upload a leaf photo (sample
+       images are in data/disease_eval/). Point out the "possible disease",
+       score bar, Varhadi advice, and the limits box. For an orange photo,
+       point out the greening warning and say why (67/73 misnamed).
+12:00  Results table (section 8): rules 0.405 -> model with safeguards 0.328
+       WER on 206 held-out verses; explain the held-out chapters and why this
+       is a pilot.
+13:00  Honest limits (section 9) and next steps (section 15).
+14:00  Questions (section 14).
+
+ If the network or Groq limit fails: the page shows a clear error. Switch to
+ KD_MODEL=openai/gpt-oss-20b, or show the saved results and the code.
+
+
+================================================================================
+14. QUESTIONS THE MENTOR IS LIKELY TO ASK
+================================================================================
+Q: Why not train an ASR model from scratch?
+A: We have hours of data, not thousands. Fine-tuning a strong Marathi model is
+   the standard way for a low-resource dialect.
+
+Q: What is your actual contribution?
+A: (1) a method to create Varhadi training pairs from published text and audio
+   (alignment, triage, review tool); (2) Varhadi rules found from real data
+   counts, with a test that enforces the evidence; (3) a trained
+   Marathi->Varhadi model plus a safety layer, evaluated on held-out chapters;
+   (4) an end-to-end mobile assistant with voice and photo features; (5) honest
+   evaluation, including negative results (raw model worse than doing nothing;
+   photo model fails on greening).
+
+Q: Bible audio is not farming speech. Is that a problem?
+A: Yes, and we say so. It measures dialect adaptation (word forms), not farm
+   vocabulary. Domain coverage needs native farm recordings/translations: the
+   tools and 491 Marathi farm sentences are ready for a native speaker.
+
+Q: How do you know the Varhadi is correct?
+A: We do not claim it is. Everything is "unverified" until a native speaker
+   reviews it. What we can show is measured closeness to the published Varhadi
+   text on chapters the model never saw.
+
+Q: Why does the output still look partly like Marathi?
+A: By design. The model has only seen scripture. Only about 1 in 5 of the word
+   changes it made that were not seen in training matched the real Varhadi, and
+   some changed the meaning, so we keep only changes seen in training. More farm
+   Varhadi data is the real fix.
+
+Q: Your model made the score worse at first. Why?
+A: Without safeguards it sometimes repeated its last clause until the length
+   limit (genealogy lists). The length guard fixes that. On typical verses it
+   was already better than the rules.
+
+Q: Isn't the length guard tuned on the test set?
+A: It was designed after we saw the failures, with thresholds taken from the
+   TRAINING data (min/max length ratio). We then re-checked on chapters the
+   earlier model had never seen, and the result held.
+
+Q: Why byte-level ByT5 instead of a word model?
+A: Dialect differences are small character edits, and byte models have no
+   unknown words, which suits little data.
+
+Q: Why a back-translated source side? Isn't that biased?
+A: Yes: the Marathi side carries the LLM's paraphrase style. The target side is
+   real Varhadi, which is what the model must learn to produce. A native
+   Marathi->Varhadi parallel set would be better.
+
+Q: Why split by chapter?
+A: Verses in a chapter are related; splitting by verse would leak. Whole
+   chapters are held out. For future recordings we split by speaker.
+
+Q: What if the LLM invents a medicine dose?
+A: The prompt forbids it and tests check our own advice text. It is a prompt
+   rule, not a guarantee; the real safeguard is a verified knowledge base
+   (planned).
+
+Q: How good is the disease detector?
+A: On public Indian photos: about 88-96% on canker, black spot, Septoria. But it
+   calls many healthy leaves diseased, and it misnames diseases outside its
+   list (greening). So we show only "possible", raise the bar to 60%, and add
+   warnings.
+
+Q: Can it run on a phone/offline?
+A: The page runs on a phone; the server must be reachable. The Varhadi model
+   needs a faster machine (GPU) for good speed. Offline use is not built.
+
+Q: What would you do with more time/resources?
+A: Native-speaker review; farm-domain Varhadi; verified ICAR/PDKV knowledge base
+   with retrieval (RAG); cotton model; field photos from farmers with consent;
+   GPU hosting; adapt the speech model once verified data exists.
+
+Q: Is any of this ready for real farmers?
+A: No. It is a research prototype with open safety limits.
+
+
+================================================================================
+15. NEXT STEPS
+================================================================================
+ 1. Native-speaker review: verify John 1 (31 clips) for the first real ASR
+    baseline; rate about 50 assistant replies; confirm the word swaps.
+ 2. Farm-domain Varhadi: translate the 491 collected farm sentences
+    (data/agri_text/sources.tsv); retrain; test on farm sentences.
+ 3. Cotton photo model: fine-tune on the public cotton dataset on Colab;
+    collect field photos (with consent) to measure real accuracy; add a
+    "none of these" option (needs unknown-disease training photos such as
+    greening and dieback).
+ 4. Verified knowledge base (ICAR, PDKV Akola) with retrieval, replacing the
+    LLM's general knowledge; agronomist review of the photo advice.
+ 5. Speed: host the Varhadi model on a GPU; consider a smaller model.
+ 6. Speech model adaptation (P2) once verified data exists; compare against the
+    baseline on the same test set.
+ 7. Voice: compare the browser engine with Groq Whisper for Marathi; later our
+    own model.
+ 8. Deployment basics: rate limiting, login/roles, HTTPS for phone microphones.
+
+
+================================================================================
+16. FILE MAP
+================================================================================
+ bot/server.py               FastAPI app: /api/chat, /api/diagnose, serves the page
+ bot/web/index.html          the whole phone UI (chat, voice, camera, result card)
+ bot/varhadi_style.json      word swaps + Varhadi grammar rules with corpus counts
+ bot/mr2vh_model.py          ByT5 loader, guards, attested-change filter
+ bot/disease.py              photo checks + classifier + advice lookup
+ bot/disease_guidance.json   advice per disease (Marathi + Varhadi), crop limits
+ bot/models/                 trained/downloaded weights (gitignored)
+ asr_baseline/               pretrained-ASR pipeline (model, chunking, evaluation)
+ varhadi_data/               alignment, triage, lexicon, gold, manifests, recordings
+ scripts/                    command-line tools (alignment, review server, pair
+                             builder, guidance builder, evaluation)
+ experiments/varhadi_adaptation/  ASR fine-tune prep + ByT5 trainer + notebooks
+ experiments/evaluation/     baseline-vs-adapted comparison
+ tests/                      132 automated tests
+ docs/                       method notes, progress report (.docx), research notes
+ EXPERIMENT_LOG.md           every measured result, with limitations
+ P2_READY.md                 why ASR fine-tuning has not been run
+ project_workflow_technical.md   earlier stage-by-stage technical write-up
+ project_progress.txt        earlier progress log
+ data/                       local only (gitignored): audio, transcripts,
+                             translation pairs, disease test photos
+================================================================================
+END
+================================================================================

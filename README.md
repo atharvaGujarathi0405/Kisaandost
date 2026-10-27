@@ -137,3 +137,34 @@ python -m pytest tests/test_bot.py
 
 Voice in/out uses the browser's Marathi speech engines (Chrome/Android; needs `localhost` or HTTPS,
 so a phone on plain-http LAN will not get the mic). It does not use the project's IndicConformer ASR yet.
+The microphone works like a recorder: tap to start, it keeps listening through pauses (the browser ends a
+recognition session at the first pause, so the page restarts it and joins the text), your words appear live, and
+only a tap on the red stop button sends the question; the X (or Esc) cancels. It stops by itself after 5 minutes.
+
+### Crop photo diagnosis
+
+The camera button sends a leaf photo to `POST /api/diagnose` with the crop (cotton, soybean, orange, tur). Soybean and orange use
+CC BY 4.0 ConvNeXt classifiers by IXR (`ixrbhii/soybean-disease-convnext`, `ixrbhii/citrus-disease-convnext`, downloaded from
+Hugging Face on first use; credit "Multi-crop disease models, IXR (agritechixr)" and the LeafNet dataset). Cotton and tur have no model
+yet and say so. The result is always a *possible* disease with the advice in `bot/disease_guidance.json` (no product names or doses,
+not agronomist-checked). Measured accuracy on independent public photos, and why the confidence bar is 0.60, is in `EXPERIMENT_LOG.md` (P4).
+Run `python -m scripts.build_disease_guidance` after editing the guidance to refresh its Varhadi text.
+
+### Farmer profile, local weather and region
+
+On first launch the page asks for district, taluka, village (optional name and crops). There is **no password or account**: the details are
+kept in the browser (`localStorage`) and sent with each question as `profile`. The server (`bot/places.py`) checks district/taluka against
+`bot/places.json` (11 Vidarbha districts, 120 talukas, about 13,000 places), looks up the forecast on Open-Meteo (`bot/weather.py`, free,
+no key, cached 30 min; village coordinates when OpenStreetMap has them, else the taluka centre) and adds location, crops, weather and the
+PDKV Akola agro-climatic zone (Western/Central/Eastern Vidarbha) to the model's prompt. Soil is stated only in general terms and the bot
+sends the farmer to the Soil Health Card. `GET /api/weather` feeds the weather card; `GET /api/places` and `/api/places/villages` feed the form.
+
+Rebuild the place list with `python -m scripts.build_vidarbha_places` (about 11 Overpass requests, with back-off; it retries because the
+public server is often busy). Villages come from OpenStreetMap contributors (ODbL, credit shown in the page) and are **incomplete** and
+mostly spelled in Roman letters; a village missing from the list can be typed. Weather: Open-Meteo.com.
+
+### Voice output
+
+Replies are read by a server voice, `facebook/mms-tts-mar` (CC BY-NC 4.0; downloaded from Hugging Face on first use), through
+`POST /api/tts` (`bot/tts.py`), sentence by sentence with pauses; the page falls back to the browser's Marathi voice. It is a
+**Marathi** voice, not a Varhadi one. A Varhadi voice is not trained (see `EXPERIMENT_LOG.md` P6). `KD_TTS=0` turns the server voice off.
