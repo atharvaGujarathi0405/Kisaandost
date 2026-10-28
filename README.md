@@ -167,4 +167,7 @@ mostly spelled in Roman letters; a village missing from the list can be typed. W
 
 Replies are read by a server voice, `facebook/mms-tts-mar` (CC BY-NC 4.0; downloaded from Hugging Face on first use), through
 `POST /api/tts` (`bot/tts.py`), sentence by sentence with pauses; the page falls back to the browser's Marathi voice. It is a
-**Marathi** voice, not a Varhadi one. A Varhadi voice is not trained (see `EXPERIMENT_LOG.md` P6). `KD_TTS=0` turns the server voice off.
+**Marathi** voice by default. A Varhadi-tuned voice (MMS fine-tuned on 1.4 h of one narrator, `EXPERIMENT_LOG.md` P7) is used automatically if
+`bot/models/tts/` exists. It is local only and **never to be published** (narrator's recordings have an unverified licence). By the Whisper
+round-trip check it is not more recognisable than the generic voice (CER 0.36 vs 0.26, n = 20); only a native listening test can say whether
+it sounds better. `KD_TTS=0` turns the server voice off.

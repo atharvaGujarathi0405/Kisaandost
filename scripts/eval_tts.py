@@ -9,6 +9,7 @@ import argparse
 import io
 import json
 import os
+import time
 import wave
 from pathlib import Path
 
@@ -22,8 +23,13 @@ OUT = ROOT / "data" / "tts_eval" / "voices"
 
 
 def whisper(client, wav: bytes, name: str) -> str:
-    r = client.audio.transcriptions.create(file=(name, wav), model="whisper-large-v3", language="mr", temperature=0)
-    return r.text
+    for attempt in range(5):                              # the API drops the odd connection; back off and retry
+        try:
+            return client.audio.transcriptions.create(file=(name, wav), model="whisper-large-v3", language="mr", temperature=0).text
+        except Exception:
+            if attempt == 4:
+                raise
+            time.sleep(2 ** attempt)
 
 
 def ogg_to_wav(p: Path) -> bytes:

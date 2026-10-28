@@ -30,3 +30,12 @@ data/disease_eval/
 data/tts_eval/
 data/tts_train/
 data/places_raw/
+
+# datasets/ catalogue: only README and the open-licence files are tracked (the rest has VAHNT/Wikipedia text)
+datasets/*
+!datasets/README.md
+!datasets/recording_prompts.csv
+!datasets/varhadi_word_rules.csv
+!datasets/vidarbha_talukas.csv
+!datasets/vidarbha_villages.csv
+!datasets/disease_guidance.csv
