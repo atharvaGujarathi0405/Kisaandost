@@ -70,5 +70,8 @@ def test_endpoint(monkeypatch):
     assert c.post("/api/tts", json={"text": "पाणी"}).status_code == 503
     monkeypatch.setattr(tts, "synthesize", lambda text: (_ for _ in ()).throw(ValueError("x")))
     assert c.post("/api/tts", json={"text": "पाणी"}).status_code == 422
+    monkeypatch.setattr(tts, "LOCAL", tts.LOCAL.parent / "no-such-voice")   # independent of a fine-tuned voice installed on this PC
     info = c.get("/api/tts/info").json()
     assert info["varhadi_voice"] is False and info["engine"]
+    monkeypatch.undo()
+    assert c.get("/api/tts/info").json()["varhadi_voice"] == (tts.LOCAL / "model.safetensors").exists()

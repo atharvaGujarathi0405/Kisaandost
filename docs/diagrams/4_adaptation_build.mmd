@@ -1,0 +1,27 @@
+flowchart TD
+    V["Real Varhadi verses<br/>Varhadi New Testament, 3,695"] --> BT["Back-translation<br/>gpt-oss-120b, temperature 0<br/>rewrite as plain standard Marathi"]
+    BT --> PR["Pairs<br/>machine Marathi to real Varhadi"]
+    PR --> CL["Clean<br/>140 dropped, 3,555 kept"]
+    CL --> SPL["Split by chapter<br/>train 3,222, validation 127, test 206"]
+    SPL --> FT["Fine-tune ByT5-small<br/>300 M parameters, 5 epochs<br/>Colab T4, 95 min<br/>validation loss 0.213 to 0.172"]
+    SPL --> MINE["Mine swaps<br/>difflib alignment, count<br/>keep if at least 20 percent"]
+    V --> CNT["Count word forms<br/>in the Varhadi text"]
+    FT --> MOD["Translator model<br/>1.2 GB"]
+    MINE --> AS["1,234 allowed swaps"]
+    CNT --> WR["92 + 9 word rules"]
+    MOD --> LAYER["ADAPTATION LAYER<br/>translator + 3 guards + word rules"]
+    AS --> LAYER
+    WR --> LAYER
+    LAYER --> EV["Evaluate on 206 held-out verses<br/>word error 0.539 to 0.328"]
+    SPL -. test split .-> EV
+
+    classDef src fill:#d9eaf4,stroke:#17668f,stroke-width:2px,color:#18211c;
+    classDef built fill:#d9eee3,stroke:#1b6a4b,stroke-width:2px,color:#18211c;
+    classDef model fill:#e6e1f7,stroke:#5642b0,stroke-width:2px,color:#18211c;
+    classDef star fill:#cfc6f5,stroke:#5642b0,stroke-width:5px,color:#18211c;
+    classDef res fill:#fbecd3,stroke:#a45d00,stroke-width:2px,color:#18211c;
+    class V src;
+    class BT,PR,CL,SPL,MINE,CNT,AS,WR built;
+    class FT,MOD model;
+    class LAYER star;
+    class EV res;

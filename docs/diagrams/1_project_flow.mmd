@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph A["Before the question, on the phone"]
+        direction LR
+        L["1 Login<br/>district, taluka, village, crops<br/>no password"] --> WX["2 Weather<br/>Open-Meteo forecast"]
+        WX --> Q["3 Ask<br/>speak, type or send a photo"]
+        Q -. leaf photo .-> PH["Photo path<br/>quality checks, leaf classifier<br/>60 percent bar, advice card"]
+    end
+    subgraph B["The answer"]
+        direction LR
+        CH["4 Chat server<br/>adds region, rainfall, weather"] --> LLM["5 Language model<br/>Groq gpt-oss-120b<br/>plain Marathi answer"]
+        LLM --> AL["6 ADAPTATION LAYER<br/>Marathi to Varhadi"]
+        AL --> TX["7 Varhadi text<br/>shown on screen"]
+        TX --> V["8 Voice model<br/>one sentence at a time"]
+        V --> AU["9 Spoken Varhadi answer"]
+    end
+    A -->|question text and profile| B
+
+    classDef phone fill:#fbecd3,stroke:#a45d00,stroke-width:2px,color:#18211c;
+    classDef server fill:#d9eee3,stroke:#1b6a4b,stroke-width:2px,color:#18211c;
+    classDef model fill:#e6e1f7,stroke:#5642b0,stroke-width:2px,color:#18211c;
+    classDef net fill:#d9eaf4,stroke:#17668f,stroke-width:2px,color:#18211c;
+    classDef star fill:#cfc6f5,stroke:#5642b0,stroke-width:5px,color:#18211c;
+    class L,Q,TX,AU phone;
+    class CH server;
+    class WX,LLM net;
+    class V,PH model;
+    class AL star;

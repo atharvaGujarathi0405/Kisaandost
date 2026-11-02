@@ -377,7 +377,11 @@ function sessionText(results) {
   return parts.join(" ");
 }
 const ERR = { "not-allowed": "माइक वापरायची परवानगी द्या", "service-not-allowed": "माइक वापरायची परवानगी द्या",
-              "audio-capture": "माइक सापडला नाई", network: "नेटवर्क नाई, आवाज ओळखता आला नाई" };
+              "audio-capture": "माइक सापडला नाई", network: "नेटवर्क नाई, आवाज ओळखता आला नाई",
+              "language-not-supported": "ह्या ब्राउझरमधी मराठी आवाज ओळख चालत नाई, लिहून इचारा" };
+const ALLOW_HELP = "माइक बंद हाय. पत्त्याच्या बाजूच्या कुलूप चिन्हावर दाबा, माइक Allow करा आन् पेज परत उघडा.";
+const WAIT_HELP = "माइकची परवानगी द्या: पत्त्याजवळ आलेल्या पॉपअपमधी Allow दाबा.";
+const micState = async () => { try { return (await navigator.permissions.query({ name: "microphone" })).state; } catch { return "unknown"; } };
 function recUI(on) {
   micBtn.classList.toggle("on", on); micBtn.innerHTML = on ? STOP_ICON : MIC_ICON;
   micBtn.setAttribute("aria-label", on ? "थांबवा आणि पाठवा" : "बोलून इचारा");
@@ -388,10 +392,12 @@ function showLive() { input.value = joinText(rv.committed, rv.session); autosize
 function beginSession() {
   const mine = rv, R = srClass();
   rec = new R(); rec.lang = "mr-IN"; rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 1;
+  rec.onstart = () => { if (rv === mine) mine.started = true; };       // until now the browser may still be waiting for the permission popup
   rec.onresult = (e) => { if (rv !== mine) return; mine.fails = 0; mine.session = sessionText(e.results); showLive(); };
   rec.onerror = (e) => {
     if (rv !== mine) return;
     if (e.error === "no-speech" || e.error === "aborted") return;      // normal while waiting: just restart
+    mine.lastErr = e.error;
     if (ERR[e.error] && e.error !== "network") mine.fatal = e.error; else mine.fails++;
   };
   rec.onend = () => {                                                   // the browser ended this session
@@ -402,12 +408,13 @@ function beginSession() {
   };
   try { rec.start(); } catch { mine.fatal = "audio-capture"; finishRec(); }
 }
-function startRec() {
+async function startRec() {
   stopSpeaking();
-  rv = { committed: input.value.trim(), prefix: input.value, session: "", stopping: false, cancel: false, fatal: null, fails: 0, t0: Date.now() };
+  if (await micState() === "denied") { setStatus(ALLOW_HELP); return; }   // the browser will not even ask again: say how to undo it
+  rv = { committed: input.value.trim(), prefix: input.value, session: "", stopping: false, cancel: false, fatal: null, fails: 0, started: false, lastErr: null, t0: Date.now() };
   recUI(true);
   const tick = () => { if (!rv) return; const s = Math.floor((Date.now() - rv.t0) / 1000);
-    setStatus(`ऐकतोय… ${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}  बोलून झालं कि थांबवा बटन दाबा, तवा पाठवतो.`, true); };
+    setStatus(rv.started ? `ऐकतोय… ${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}  बोलून झालं कि थांबवा बटन दाबा, तवा पाठवतो.` : WAIT_HELP, true); };
   tick(); rv.timer = setInterval(tick, 1000);
   beginSession();
 }
@@ -425,9 +432,12 @@ function finishRec() {
   recUI(false);
   const text = joinText(r.committed, r.session);
   if (r.cancel) { input.value = r.prefix; autosize(); setStatus(""); return; }
-  if (r.fatal || r.fails >= 3) setStatus(ERR[r.fatal || "network"]); else setStatus("");
+  if (r.fatal) setStatus(ERR[r.fatal]);
+  else if (r.fails >= 3) setStatus(ERR[r.lastErr] || `आवाज ओळखता आला नाई (${r.lastErr || "?"})`);
+  else if (!r.started) setStatus(WAIT_HELP + " नाई तर पेज परत उघडा.");
+  else setStatus("");
   input.value = text; autosize();
-  if (!text) { if (!r.fatal) setStatus("काई ऐकू आलं नाई, परत बोला"); return; }
+  if (!text) { if (!r.fatal && r.fails < 3 && r.started) setStatus("काई ऐकू आलं नाई, परत बोला"); return; }
   if (busy) { setStatus("आधीचं उत्तर येतंय. थोड्या येळानं पाठवा बटन दाबा."); return; }
   ask(text, true);
 }

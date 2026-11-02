@@ -1,0 +1,258 @@
+{
+ "status": "UNVERIFIED by a native speaker. Each swap passed the numeric evidence in `evidence` (counts in the real Varhadi text and the training pairs) and a developer's meaning check. Varhadi values are attested in the VAHNT text; dative -ले nouns rest on the pattern.",
+ "rules": {
+  "आधी": "पयले",
+  "पर्यंत": "परेंत",
+  "आतापर्यंत": "आतापरेंत",
+  "स्वतः": "स्वता",
+  "स्वतःच्या": "स्वताच्या",
+  "लोक": "लोकं",
+  "पाहून": "पाऊन",
+  "राहून": "राऊन",
+  "पाहिले": "पायले",
+  "राहते": "रायते",
+  "राहत": "रायत",
+  "राहिली": "रायली",
+  "राहिलो": "रायलो",
+  "सांगितले": "सांगतले",
+  "सांगितली": "सांगतली",
+  "सांगितल्या": "सांगतल्या",
+  "करायला": "कराले",
+  "मिळेल": "भेटीन",
+  "त्याच्यापाशी": "त्याच्यापासी",
+  "तुमच्यापाशी": "तुमच्यापासी",
+  "सहाय्यकाला": "सहाय्यकाले",
+  "खताला": "खताले",
+  "तज्ज्ञाला": "तज्ज्ञाले",
+  "जिल्ह्याला": "जिल्ह्याले",
+  "ज्याला": "ज्याले",
+  "कोणाला": "कोणाले",
+  "शरीराला": "शरीराले",
+  "देवाला": "देवाले",
+  "माणसाला": "माणसाले",
+  "आपल्याला": "आपल्याले"
+ },
+ "allowed_extra": [],
+ "evidence": {
+  "आधी": {
+   "varhadi_text_y": 92,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 18,
+   "aligned_pairs": 9,
+   "farm_sentences_x": 4
+  },
+  "पर्यंत": {
+   "varhadi_text_y": 49,
+   "varhadi_text_x": 14,
+   "marathi_side_x": 1,
+   "aligned_pairs": 0,
+   "farm_sentences_x": 2
+  },
+  "आतापर्यंत": {
+   "varhadi_text_y": 17,
+   "varhadi_text_x": 3,
+   "marathi_side_x": 15,
+   "aligned_pairs": 7,
+   "farm_sentences_x": 0
+  },
+  "स्वतः": {
+   "varhadi_text_y": 31,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 38,
+   "aligned_pairs": 18,
+   "farm_sentences_x": 0
+  },
+  "स्वतःच्या": {
+   "varhadi_text_y": 13,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 13,
+   "aligned_pairs": 5,
+   "farm_sentences_x": 0
+  },
+  "लोक": {
+   "varhadi_text_y": 349,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 419,
+   "aligned_pairs": 208,
+   "farm_sentences_x": 4
+  },
+  "पाहून": {
+   "varhadi_text_y": 83,
+   "varhadi_text_x": 1,
+   "marathi_side_x": 22,
+   "aligned_pairs": 11,
+   "farm_sentences_x": 0
+  },
+  "राहून": {
+   "varhadi_text_y": 17,
+   "varhadi_text_x": 7,
+   "marathi_side_x": 43,
+   "aligned_pairs": 12,
+   "farm_sentences_x": 0
+  },
+  "पाहिले": {
+   "varhadi_text_y": 13,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 29,
+   "aligned_pairs": 1,
+   "farm_sentences_x": 0
+  },
+  "राहते": {
+   "varhadi_text_y": 17,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 9,
+   "aligned_pairs": 4,
+   "farm_sentences_x": 4
+  },
+  "राहत": {
+   "varhadi_text_y": 23,
+   "varhadi_text_x": 1,
+   "marathi_side_x": 7,
+   "aligned_pairs": 4,
+   "farm_sentences_x": 3
+  },
+  "राहिली": {
+   "varhadi_text_y": 22,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 7,
+   "aligned_pairs": 4,
+   "farm_sentences_x": 0
+  },
+  "राहिलो": {
+   "varhadi_text_y": 20,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 7,
+   "aligned_pairs": 5,
+   "farm_sentences_x": 0
+  },
+  "सांगितले": {
+   "varhadi_text_y": 10,
+   "varhadi_text_x": 1,
+   "marathi_side_x": 115,
+   "aligned_pairs": 8,
+   "farm_sentences_x": 2
+  },
+  "सांगितली": {
+   "varhadi_text_y": 26,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 35,
+   "aligned_pairs": 18,
+   "farm_sentences_x": 0
+  },
+  "सांगितल्या": {
+   "varhadi_text_y": 29,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 15,
+   "aligned_pairs": 13,
+   "farm_sentences_x": 0
+  },
+  "करायला": {
+   "varhadi_text_y": 21,
+   "varhadi_text_x": 6,
+   "marathi_side_x": 21,
+   "aligned_pairs": 3,
+   "farm_sentences_x": 0
+  },
+  "मिळेल": {
+   "varhadi_text_y": 27,
+   "varhadi_text_x": 4,
+   "marathi_side_x": 41,
+   "aligned_pairs": 11,
+   "farm_sentences_x": 4
+  },
+  "त्याच्यापाशी": {
+   "varhadi_text_y": 63,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 23,
+   "aligned_pairs": 14,
+   "farm_sentences_x": 0
+  },
+  "तुमच्यापाशी": {
+   "varhadi_text_y": 23,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 3,
+   "aligned_pairs": 3,
+   "farm_sentences_x": 0
+  },
+  "सहाय्यकाला": {
+   "varhadi_text_y": 0,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 0,
+   "aligned_pairs": 0,
+   "farm_sentences_x": 3,
+   "dative_nouns_in_real_text": 260
+  },
+  "खताला": {
+   "varhadi_text_y": 0,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 0,
+   "aligned_pairs": 0,
+   "farm_sentences_x": 2,
+   "dative_nouns_in_real_text": 260
+  },
+  "तज्ज्ञाला": {
+   "varhadi_text_y": 0,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 0,
+   "aligned_pairs": 0,
+   "farm_sentences_x": 2,
+   "dative_nouns_in_real_text": 260
+  },
+  "जिल्ह्याला": {
+   "varhadi_text_y": 0,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 0,
+   "aligned_pairs": 0,
+   "farm_sentences_x": 2,
+   "dative_nouns_in_real_text": 260
+  },
+  "ज्याला": {
+   "varhadi_text_y": 63,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 59,
+   "aligned_pairs": 28,
+   "farm_sentences_x": 1,
+   "dative_nouns_in_real_text": 260
+  },
+  "कोणाला": {
+   "varhadi_text_y": 56,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 11,
+   "aligned_pairs": 8,
+   "farm_sentences_x": 0,
+   "dative_nouns_in_real_text": 260
+  },
+  "शरीराला": {
+   "varhadi_text_y": 13,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 6,
+   "aligned_pairs": 5,
+   "farm_sentences_x": 1,
+   "dative_nouns_in_real_text": 260
+  },
+  "देवाला": {
+   "varhadi_text_y": 41,
+   "varhadi_text_x": 1,
+   "marathi_side_x": 19,
+   "aligned_pairs": 11,
+   "farm_sentences_x": 0,
+   "dative_nouns_in_real_text": 260
+  },
+  "माणसाला": {
+   "varhadi_text_y": 58,
+   "varhadi_text_x": 2,
+   "marathi_side_x": 39,
+   "aligned_pairs": 27,
+   "farm_sentences_x": 0,
+   "dative_nouns_in_real_text": 260
+  },
+  "आपल्याला": {
+   "varhadi_text_y": 8,
+   "varhadi_text_x": 0,
+   "marathi_side_x": 7,
+   "aligned_pairs": 4,
+   "farm_sentences_x": 1,
+   "dative_nouns_in_real_text": 260
+  }
+ }
+}

@@ -43,6 +43,9 @@ def _load_env() -> None:
 _load_env()
 
 STYLE = json.loads((ROOT / "varhadi_style.json").read_text(encoding="utf-8"))
+# Evidence-backed extra swaps for farm text (scripts/build_farm_kb.py). KD_FARM_KB=0 turns them off. Unverified by a native speaker.
+_FARM = ROOT / "farm_kb.json"
+FARM_RULES = json.loads(_FARM.read_text(encoding="utf-8")).get("rules", {}) if _FARM.exists() and os.environ.get("KD_FARM_KB", "1") != "0" else {}
 _DEVA = "ऀ-ॿ"
 _WORD = re.compile(f"[{_DEVA}]+")
 
@@ -51,7 +54,7 @@ def varhadify(text: str) -> str:
     """Swap closed-class standard-Marathi words for their Varhadi forms (whole words only).
 
     The LLM drifts back to standard Marathi; this makes the core grammar deterministic."""
-    swap = {**STYLE["enforce"], **STYLE["enforce_by_rule"]}
+    swap = {**FARM_RULES, **STYLE["enforce"], **STYLE["enforce_by_rule"]}   # the hand-checked lists win over the farm additions
     return _WORD.sub(lambda m: swap.get(m.group(0), m.group(0)), text)
 
 
@@ -76,7 +79,7 @@ def to_varhadi(text: str) -> str:
 
 def build_system() -> str:
     # Varhadi -> Marathi, only so the model understands the farmer's words.
-    gloss = ", ".join(f"{v}={k}" for k, v in {**STYLE["enforce"], **STYLE["enforce_by_rule"]}.items())
+    gloss = ", ".join(f"{v}={k}" for k, v in {**FARM_RULES, **STYLE["enforce"], **STYLE["enforce_by_rule"]}.items())
     return f"""You are KisaanDost (किसानदोस्त), a voice-first assistant for farmers in Vidarbha, Maharashtra.
 Main crops: cotton (कपाशी), soybean (सोयाबीन), orange (संत्रा), tur (तूर).
 

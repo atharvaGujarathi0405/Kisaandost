@@ -1,0 +1,39 @@
+flowchart LR
+    subgraph T["Marathi to Varhadi layer (output side)"]
+        direction LR
+        S1["Varhadi New Testament<br/>audio and text, 3,695 verses"] --> P1["Back-translated pairs<br/>machine Marathi to real Varhadi"]
+        P1 --> M1["ByT5 translator<br/>1,234 allowed swaps<br/>92 + 9 word rules"]
+        M1 --> F1(["Adaptation layer"])
+    end
+    subgraph X["Input side, mined not wired in"]
+        direction LR
+        A1["Aligned audio<br/>1,296 segments"] --> LX["Lexicon mining<br/>345 candidate pairs"]
+        LX -.-> N1(["Varhadi to Marathi<br/>normaliser, planned"])
+    end
+    subgraph Vo["Voice"]
+        direction LR
+        S2["Narrator clips, Luke<br/>349 clips, 1.4 hours"] --> M2["MMS-TTS fine-tune<br/>Kaggle, 4,400 steps"]
+        M2 --> F2(["Spoken answer"])
+    end
+    subgraph D["Dataset for the mentor"]
+        direction LR
+        S3["Marathi Wikipedia<br/>farming articles"] --> D1["573 sentences drafted<br/>into Varhadi by the layer"]
+        D1 -.-> R1["Native speaker review<br/>not done yet"]
+        R1 -.-> F3(["Varhadi farming dataset"])
+    end
+    subgraph O["Open data"]
+        direction LR
+        S4["OpenStreetMap<br/>and PDKV rainfall zones"] --> M4["places.json<br/>13,202 places"]
+        M4 --> F4(["Login and place lists"])
+        S5["Public leaf models<br/>and crop advice text"] --> M5["Photo checks<br/>60 percent bar"]
+        M5 --> F5(["Photo diagnosis"])
+    end
+    S1 --> A1
+    classDef src fill:#d9eaf4,stroke:#17668f,stroke-width:2px,color:#18211c;
+    classDef built fill:#d9eee3,stroke:#1b6a4b,stroke-width:2px,color:#18211c;
+    classDef feat fill:#e6e1f7,stroke:#5642b0,stroke-width:3px,color:#18211c;
+    classDef todo fill:#f8e1dc,stroke:#b3361f,stroke-width:2px,stroke-dasharray:6 4,color:#18211c;
+    class S1,S2,S3,S4,S5,A1 src;
+    class P1,M1,M2,D1,M4,M5,LX built;
+    class F1,F2,F3,F4,F5,N1 feat;
+    class R1 todo;

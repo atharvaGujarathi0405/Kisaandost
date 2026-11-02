@@ -129,7 +129,13 @@ def negation_ok(source: str, out: str) -> bool:
 
 def _allowed() -> dict | None:
     f = MODEL_DIR / "allowed_subs.json"
-    return json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
+    if not f.exists():
+        return None
+    data = json.loads(f.read_text(encoding="utf-8"))
+    kb = Path(__file__).with_name("farm_kb.json")      # swaps a native speaker approved (scripts/build_farm_kb.py --merge-reviewed)
+    if kb.exists() and os.environ.get("KD_FARM_KB", "1") != "0":
+        data["pairs"] = data["pairs"] + json.loads(kb.read_text(encoding="utf-8")).get("allowed_extra", [])
+    return data
 
 
 def translate_text(text: str, fallback, generate=_generate) -> str:

@@ -52,6 +52,8 @@ def build() -> None:
                                       "flag", "status", "reviewed_varhadi", "reviewer"], draft)
     farm = read_delim(D / "agri_text" / "mr2vh_farming_dataset.csv", ",")          # scripts/build_mr2vh_farming_dataset.py
     write("mr2vh_farming_dataset.csv", list(farm[0]), farm)
+    rev = read_delim(D / "agri_text" / "farm_substitution_candidates.csv", ",")          # scripts/build_farm_kb.py
+    write("farm_substitution_candidates.csv", list(rev[0]), rev)
     write("recording_prompts.csv", ["prompt_id", "type", "domain", "topic", "crop", "text", "varhadi_text", "rewritten_by",
                                     "review_status", "notes"], read_delim(D / "prompts" / "recording_prompts.csv", ","))
 
@@ -120,6 +122,7 @@ CATALOGUE = [
     ("agri_marathi_sentences.csv", "Marathi farming sentences (cotton, soybean, orange, tur, general) split from Marathi Wikipedia articles", "mr.wikipedia.org, revisions in data/agri_text/provenance.json", "CC BY-SA 4.0 (attribution + share-alike)", "Raw text, includes a few citation lines", False),
     ("agri_varhadi_drafts.csv", "The same sentences converted to Varhadi by the adaptation layer (ByT5 model + word rules)", "scripts/draft_agri_varhadi.py", "CC BY-SA 4.0 (derived from Wikipedia)", "MACHINE DRAFT, not checked by a native speaker; `flag` marks 3 Wikipedia reference lines and 13 rows with Latin letters or digits", False),
     ("mr2vh_farming_dataset.csv", "MAIN OUTPUT: Marathi farming sentences (Wikipedia, bot's disease advice, recording prompts) translated to Varhadi by the adaptation layer; separate columns for the model stage and the word-rule stage", "scripts/build_mr2vh_farming_dataset.py", "Wikipedia rows CC BY-SA 4.0, other rows project's own", "MACHINE DRAFT, not checked by a native speaker; model trained on scripture, not farming text", False),
+    ("farm_substitution_candidates.csv", "Every Marathi to Varhadi word swap the unfiltered translator proposes on the farm sentences, with its evidence tier and an empty native_verdict column for a native speaker", "scripts/build_farm_kb.py", "word pairs only; example sentences are Wikipedia text (CC BY-SA)", "UNVERIFIED: this is the worklist for native review; rows marked yes are merged back into the bot", False),
     ("recording_prompts.csv", "Prompts for collecting spoken Varhadi farming queries (elicitation + question prompts)", "written for this project", "project's own", "Draft, needs native review", True),
     ("native_verified_gold_eval.csv", "Native-speaker-verified test set for measuring the adaptation layer", "to be collected", "-", "EMPTY (header only): no native review has happened yet", False),
     ("VARHADI ADAPTATION LAYER (Marathi -> Varhadi)", None),
