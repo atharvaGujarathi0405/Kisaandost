@@ -23,6 +23,7 @@ def fake_client(reply="तुम्ही काय करता आहे?", se
 def no_model(monkeypatch):
     """Tests must not load the 1.2 GB model even when its files exist locally."""
     monkeypatch.setattr(server.mr2vh_model, "available", lambda: False)
+    monkeypatch.setattr(server.agent, "enabled", lambda: False)   # a real GEMINI_API_KEY in .env must not send these tests to Gemini
 
 
 @pytest.fixture
@@ -45,6 +46,12 @@ def test_varhadify_swaps_whole_words_only():
     assert server.varhadify("आहेत") == "हायत"            # not partially matched by आहे
     assert server.varhadify("मगर आला") == "मगर आला"       # मग inside मगर untouched; आला is a verb, untouched
     assert server.varhadify("हवामान ठीक आहे") == "हवामान ठीक हाय"
+
+
+def test_dictionary_swaps_apply_but_standard_farm_terms_and_ambiguous_words_stay():
+    assert server.varhadify("कोथिंबीर आणि साप") == "सांभार अन् सरप"      # datasets/Varhadi Marathi word dataset.csv, one clear form
+    assert server.varhadify("ज्वारी आणि शेणखत") == "ज्वारी अन् शेणखत"   # standard farm terms are never rewritten
+    assert server.varhadify("आगाऊ गांडूळ") == "आगाऊ गांडूळ"               # hand-excluded (advance payment) / three Varhadi forms in the dictionary
 
 
 def test_tidy_strips_list_markers():

@@ -294,6 +294,18 @@ async function ask(text, fromVoice = false) {
     if (!r.ok) throw new Error(typeof data.detail === "string" ? data.detail : "काई तरी चुकलं, परत ट्राय करा");
     history.push({ role: "assistant", content: data.reply });
     const row = add("bot", data.reply);
+    if (data.sources && data.sources.length) {            // passages the answer came from (only when the document agent answered)
+      const n = document.createElement("div"); n.className = "note"; n.append("स्रोत: ");
+      const seen = new Set();
+      data.sources.forEach((s) => {
+        const key = s.title + s.page; if (seen.has(key)) return; seen.add(key);
+        if (seen.size > 1) n.append(" · ");
+        const a = document.createElement("a"); a.textContent = s.publisher + ", पान " + s.page; a.title = s.title;
+        if (/^https?:\/\//.test(s.url)) { a.href = s.url; a.target = "_blank"; a.rel = "noopener noreferrer"; }
+        n.appendChild(a);
+      });
+      log.appendChild(n); log.scrollTop = log.scrollHeight;
+    }
     if (autoSpeak && fromVoice && row._speakBtn) speak(data.reply, row._speakBtn);
     store.set("history", JSON.stringify(history.slice(-12)));
   } catch (e) {

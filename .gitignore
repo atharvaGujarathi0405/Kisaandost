@@ -21,6 +21,8 @@ data/evaluation/
 data/agri_text/
 
 data/translation/
+data/translation_v4/
+data/mr2vh_v4_data.zip
 
 # fine-tuned Varhadi weights: VAHNT licence unverified, never publish
 bot/models/
@@ -39,3 +41,10 @@ datasets/*
 !datasets/vidarbha_talukas.csv
 !datasets/vidarbha_villages.csv
 !datasets/disease_guidance.csv
+experiments/varhadi_adaptation/mr2vh_kaggle_v4.ipynb
+data/translation_v5/
+data/mr2vh_v5_data.zip
+experiments/varhadi_adaptation/mr2vh_kaggle_v5.ipynb
+
+# RAG corpus: publishers' documents, extracted locally only (scripts/build_rag_index.py)
+data/rag/

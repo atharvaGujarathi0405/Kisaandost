@@ -10,3 +10,8 @@ transformers>=4.44,<5
 timm>=1.0
 pillow>=10
 numpy>=1.26
+
+# Document agent (bot/agent.py, bot/rag.py). The corpus is built by: python -I scripts/build_rag_index.py
+google-genai>=3.0
+pymupdf>=1.24   # only for scripts/build_rag_index.py
+requests>=2.31 # only for scripts/build_rag_index.py

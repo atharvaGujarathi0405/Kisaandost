@@ -32,6 +32,8 @@ TRANS = ROOT / "data" / "translation"
 FARM_CSV = ROOT / "datasets" / "mr2vh_farming_dataset.csv"
 PROPOSALS = ROOT / "data" / "agri_text" / "farm_model_proposals.jsonl"
 REVIEW = ROOT / "data" / "agri_text" / "farm_substitution_candidates.csv"
+WORDS = ROOT / "datasets" / "Varhadi Marathi word dataset.csv"        # the developer's dictionary (Maayboli thread, Wikipedia, News Dirt)
+FARM_TERMS = ROOT / "datasets" / "Marathi farm terms reference.csv"   # standard Marathi farm words; no Varhadi side, so used only as a do-not-touch list
 KB = ROOT / "bot" / "farm_kb.json"
 W = re.compile("[ऀ-ॿ]+")
 
@@ -101,6 +103,43 @@ def build_rules(vh, mr, al, occ, farm):
     return rules, ev, dropped
 
 
+# Dictionary rows I excluded by hand: vulgar, a breed rather than the animal, or not the same thing.
+SKIP_WORDS = {"मारणे", "बीफ", "पाणीपुरी", "म्हैस", "विहिन", "अ‍ॅसिडीटी", "आगाऊ", "कारभारी", "बाजूला", "थापा", "रांग", "फुटलेली", "ठेंगा", "बोबड़ा", "टीट्वी", "समोर"}  # आगाऊ = advance (payment) on a farm; रांग = a crop row
+
+
+def dataset_rules(have):
+    """Word swaps from datasets/Varhadi Marathi word dataset.csv. Kept only when the row is marked direction_safe=yes, is one
+    word on each side (first variant of 'a / b', brackets dropped), is not a verb form (inflection depends on gender and number),
+    not slang, has exactly one Varhadi form for that Marathi word, and the Marathi word is not a standard farm term.
+    UNVERIFIED by a native speaker: the dictionary is community-contributed (verified=no on every row)."""
+    protect = {w.strip() for r in csv.DictReader(open(FARM_TERMS, encoding="utf-8-sig"))
+               for w in re.split(r"[/,]", re.sub(r"\(.*?\)", "", r["marathi"]))}
+    cand = collections.defaultdict(set)
+    for r in csv.DictReader(open(WORDS, encoding="utf-8-sig")):
+        if r["source_name"].startswith("KisaanDost") or r["direction_safe"] != "yes" or r["mapping_type"] != "word":
+            continue
+        if r["category"] in ("verb", "verb_form", "insult_slang") or "UNCLEAR" in r["evidence"] or "standard Marathi word" in r["evidence"]:
+            continue
+        x, y = r["marathi"].strip(), re.split(r"[/,]", re.sub(r"\(.*?\)", "", r["varhadi"]))[0].strip()
+        if W.fullmatch(x) and W.fullmatch(y) and x != y and x not in SKIP_WORDS and x not in protect and x not in have:
+            cand[x].add(y)
+    return {x: next(iter(ys)) for x, ys in cand.items() if len(ys) == 1}
+
+
+def filled_rules(path=ROOT / "datasets" / "farm_words_to_fill.csv"):
+    """Swaps written into the 'varhadi' column of the fill-in sheet (frequent farm words that are still Marathi), by someone who knows
+    Varhadi. One word per side; the first of 'a / b' is used. These are the only rules that skip the dictionary filters, because a
+    person chose them for exactly these words."""
+    if not path.exists():
+        return {}
+    out = {}
+    for r in csv.DictReader(open(path, encoding="utf-8-sig")):
+        x, y = r["marathi"].strip(), re.split(r"[/,]", r["varhadi"])[0].strip()
+        if y and x != y and W.fullmatch(x) and W.fullmatch(y):
+            out[x] = y
+    return out
+
+
 def proposals(regenerate):
     if regenerate or not PROPOSALS.exists():
         from bot import server  # noqa: F401  (loads .env, not needed for the model)
@@ -167,6 +206,15 @@ def main():
     vh, mr, al, occ = corpora()
     farm = collections.Counter(M._core(w) for r in csv.DictReader(open(FARM_CSV, encoding="utf-8-sig")) for w in r["marathi"].split())
     rules, ev, dropped = build_rules(vh, mr, al, occ, farm)
+    style = json.loads((ROOT / "bot" / "varhadi_style.json").read_text(encoding="utf-8"))
+    extra = dataset_rules(set(rules) | set(style["enforce"]) | set(style["enforce_by_rule"]))
+    rules.update(extra)
+    ev.update({x: "dictionary (datasets/Varhadi Marathi word dataset.csv), unverified" for x in extra})
+    print(f"dictionary swaps added: {len(extra)}")
+    filled = filled_rules()
+    rules.update(filled)
+    ev.update({x: "filled in datasets/farm_words_to_fill.csv" for x in filled})
+    print(f"swaps from the fill-in sheet: {len(filled)}")
     old = json.loads(KB.read_text(encoding="utf-8")) if KB.exists() else {}
     kb = {"status": "UNVERIFIED by a native speaker. Each swap passed the numeric evidence in `evidence` (counts in the real Varhadi text and the "
                     "training pairs) and a developer's meaning check. Varhadi values are attested in the VAHNT text; dative -ले nouns rest on the pattern.",
