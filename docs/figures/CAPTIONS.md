@@ -1,0 +1,22 @@
+# Figure captions (draft)
+
+Regenerate every figure with `python -m scripts.make_paper_figures` (needs `pip install matplotlib`). Each figure is a 300 dpi PNG
+and a vector PDF. Numbers come from `EXPERIMENT_LOG.md`; figures marked DATA read a local file that is not in git.
+All error rates are against Varhadi text that no native speaker has verified. Titles are left out of the images on purpose, so the
+paper's own caption style can be used.
+
+| File | Where in the paper | Caption |
+| --- | --- | --- |
+| `fig01_architecture` | 3 System overview | The KisaanDost server. A farmer's question passes through local context and a Gemini agent that searches 11 public documents, then through a Varhadi conversion layer; a leaf photo takes a separate classifier path. Gemini proofreading is built but switched off. |
+| `fig02_conversion_scripture` | 6 Conversion | Word error rate on 206 held-out scripture verses for three ByT5 fine-tunes, raw and with the full layer (length guard, attested-change filter, negation check, rules), and for the deployed v5 with the word lexicon. Dashed lines: Marathi left unchanged (0.539) and hand-checked word rules alone (0.401). |
+| `fig03_conversion_new_sentences` | 6.7 v5 | Word error rate on 119 held-out sentences from the user-supplied datasets. Hatched bars are optimistic: the test sentences share a source and templates with the training pairs, so they show reproduction of that source, not authenticity. The attested-change filter discards most of the raw model's gain until its allowed list is rebuilt from the v5 training pairs. |
+| `fig04_safeguards` | 6.4 Safeguards | (a) The first fine-tuned model used raw is worse than copying the input (0.593 against 0.533) because of repetition loops; the length guard fixes this. 135 held-out verses. (b) Share of the model's word changes that matched the real Varhadi: changes seen in the training pairs 71%, changes not seen 21%, changes that merely follow training edit patterns 19-20%. |
+| `fig05_farm_words_changed` | 6.10 Farm text | Share of farm words changed, a proxy for how Varhadi an answer looks (not an accuracy). (a) 573 farm sentences without a model. (b) 60 sampled farm sentences with the full pipeline: v4 changed fewer words than v3 because its rule-made training pairs taught it to copy. |
+| `fig06_register_disagreement` | 6.8 Lexicon | The two training sources disagree on spoken verb endings: the share of words with each ending that were changed in the scripture pairs against the user datasets. |
+| `fig07_lexicon_threshold_sweep` (DATA) | 6.8 Lexicon | Validation word error of rules plus the word lexicon for each setting of `min_count` and `min_share`, with the number of lexicon entries. The lowest error (0.422) comes from the most permissive setting; the rules-only baseline is 0.454. |
+| `fig08_triage_confidence` (DATA) | 5.3 Triage | Distribution of the review-triage confidence over the 1,296 aligned candidate segments, with the thresholds for high-confidence (at least 0.90) and reject (below 0.50, before penalties). No segment has yet been verified by a person. |
+| `fig09_user_dataset_quality` | 4.3 Data | Quality of the three user sentence datasets: share of rows with clear Varhadi marker words, share of words that differ from the Marathi side, and share of rows identical to it. |
+| `fig10_disease_classifier_test` | 8.4 Photos | Independent test of the soybean and orange leaf classifiers on public photos they were not tested on. (a) Photos classified correctly by class. (b) Precision on known diseases as the confidence threshold rises; 0.60 was chosen. (c) Photos of diseases the models do not know are still answered with confidence: soybean 97 of 151, orange greening 73 of 73 (67 called black spot). |
+| `fig11_voice_round_trip` | 8.2 Voice | Round-trip character error (speak, then transcribe with Whisper large-v3) on 20 held-out sentences. The fine-tuned Varhadi voice is less recognisable to a Marathi recogniser than the generic voice; this is a proxy, not a listening test. |
+| `fig12_retrieval_corpus` (DATA) | 7.1 Corpus | The retrieval corpus: (a) chunks per document, 1,246 in total; (b) chunks that mention each crop. Orange and soybean are the thinnest crops. |
+| `fig13_agent_latency_and_quota` | 7.4-7.5 Agent | (a) Measured time per answer in four live checks. (b) Derived: answers per day on the Gemini free tier (20 requests per day per model) when each question needs searches + 1 requests. |
