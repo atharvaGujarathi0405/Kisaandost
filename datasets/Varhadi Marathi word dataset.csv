@@ -1,0 +1,309 @@
+﻿id,varhadi,marathi,english_gloss,category,agri,mapping_type,direction_safe,source_name,source_url,evidence,verified
+V0001,आळोंग (फिरणे),झोपताना या कडेवरुन त्या कडेवर होणे,turning from side to side in sleep,verb,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0002,बात,अगदी लगेच,immediately,adverb,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0003,टोंगळा,गुडघा,knee,body,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0004,वज (घेणे),काळजी,"care, worry",noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0005,हिडगा,शिष्ट,snobbish,adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0006,गंज,पातेले,cooking pot,kitchen,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,Varhadi form is also a standard Marathi word (rust),no
+V0007,गुंडी,चरवी,small metal water pot,kitchen,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0008,कोपर,परात,large flat dish for kneading,kitchen,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,Varhadi form is also a standard Marathi word (elbow),no
+V0009,सांभार,कोथिंबीर,coriander,crop,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937; https://www.maayboli.com/node/11937?page=1,confirmed by a commenter on MB-1,no
+V0010,घोळाना,कोशिंबीर,salad,food,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0011,पुदाना पाडणे,एखादी गोष्ट नष्ट करणे,to destroy something,verb,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0012,सराटा,उलथणं,spatula,kitchen,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0013,ढेमसं,दिलपसंद,round gourd variety,crop,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,UNCLEAR: source's दिलपसंद is itself a vegetable name,no
+V0014,भेद्रं,टोमॅटो,tomato,crop,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0015,टरबुज्,कलिंगड,watermelon,crop,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,UNCLEAR: commenter unsure,no
+V0016,गधडीचं,एक सौम्य शिवी,a mild swear word,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0017,निशाणी,शिडी,ladder,household,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,"Varhadi form is also a standard Marathi word (sign, mark)",no
+V0018,सुतना,पायजमा,pyjama,clothing,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0019,मनिला,शर्ट,shirt,clothing,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0020,एंगला,चढला,climbed,verb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0021,खकाणा / खकाना,कचरा,rubbish,household,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0022,काणा,चकणा,squint-eyed,adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0023,भोकणा,अंध,blind,adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0024,लमचा,बेअक्कल,senseless,insult_slang,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0025,पोटुशी,गर्भार,pregnant,body,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0026,इच्चक,कारभारी,"manager, steward",person,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,,no
+V0027,धान,भात,"rice, paddy",crop,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937; https://www.maayboli.com/node/11937?page=1,"DISPUTED: a commenter says धान means unhusked rice, not भात",no
+V0028,रपातपा करणे,फेरेफार करुन काम तडीस लावणे,get a job done by juggling things,verb,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0029,सलटवणे,मार्गी लावणे,"sort out, settle",verb,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0030,बोंबी,बेंबी,navel,body,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0031,भेंड,ठेंगा,"thumbs-down, a nothing",noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0032,टीटी,टीट्वी,lapwing,animal,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0033,होला,पारवा,dove,animal,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0034,खबुत्तर,कबुतर,pigeon,animal,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0035,टोया,बारका वेगळ्या रंगाचे मुंडके असलेला पोपट,small parrot with differently coloured head,animal,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0036,मिठ्ठू,लाल चोचीचा हिरवा पोपट,green parrot with red beak,animal,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0037,ढेप,गुळाची ढेप (पेंड),jaggery block,food,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0038,ढेप,जनावराची पेंड,oilcake fed to cattle,livestock_feed,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,second sense of ढेप,no
+V0039,जेवन्या हाताले,उजव्या हाताला,to the right hand,direction,no,phrase,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0040,सरक्या हाताले,उजव्या हाताला,to the right hand,direction,no,phrase,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0041,हगोड्या हाताले,डाव्या हाताला,to the left hand,direction,no,phrase,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0042,धुत्या हाताले,डाव्या हाताला,to the left hand,direction,no,phrase,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0043,वायल्या हाताले,डाव्या हाताला,to the left hand,direction,no,phrase,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0044,म्हावरे / मावरे,समोर,in front,direction,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0045,बाजुनं,बाजूला,beside,direction,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0046,म्हाली,न्हावी,barber,person,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0047,सरप,साप,snake,animal,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,field hazard,no
+V0048,जाम,पेरू,guava,crop,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0049,शिदोड,गांडूळ,earthworm,soil_fauna,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0050,गेंडूर,गांडूळ,earthworm,soil_fauna,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0051,गेंडरगिटकी,गांडूळ,earthworm,soil_fauna,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0052,मुर्रा / मुर्‍हा,म्हैस,buffalo,livestock,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0053,भद्दाडा,खुप मोठा / ठळक,"very big, prominent",adjective,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0054,भुलली,विसरली,(she) forgot,verb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0055,याद नाही,आठवण नाही,don't remember,verb,no,phrase,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0056,येलु / येल्लु,जास्त लाडात येउ नको,don't act too pampered,verb,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0057,कुतणे / कुतु,कुंथणे,"to strain, grunt",verb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0058,गंजुली,छोटा गंज,small cooking pot,kitchen,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0059,सुगडं,संक्रांतीला वाणात 'लुटायचं' काळ्या मातीचं मडकं,black clay pot given at Sankranti,festival,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0060,दिवलाणी,पणती,small oil lamp,household,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0061,आंगारडबी,आगपेटी,matchbox,household,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0062,तपेलं,पातेले,pot,kitchen,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0063,गुळपट्टी,शेंगदाणे गुळाची चिक्की,peanut-jaggery chikki,food,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0064,साखरपट्टी,शेंगदाणे साखरेची पांढरी चिक्की,white peanut-sugar chikki,food,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0065,खरमुरे,भाजलेले खारे दाणे,roasted salted peanuts,food,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0066,चिरंजीचे दाणे,साखरेचा काटेरी हलवा,spiky sugar sweet,food,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2; https://www.maayboli.com/node/11937?page=3,,no
+V0067,मोगरी,कपडे धुताना कपड्यावर आपटायचं बॅटसारखं उपकरण,wooden beater for washing clothes,household,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0068,कवेलू,कौलं,roof tiles,household,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0069,बारी,रांग,queue,noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0070,मेकूड,नाकातच वाळलेला शेंबूड,dried nasal mucus,body,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0071,सात्री,सतरंजी,cotton floor rug,household,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0072,उस्ती,उशी,pillow,household,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0073,माठ,तांदूळजिरा भाजी,amaranth leafy vegetable,crop,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,Varhadi form is also a standard Marathi word (clay water pot),no
+V0074,खर्रा,मावा,chewing-tobacco mix,noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0075,घोटा,मावा,chewing-tobacco mix,noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0076,मावट्या,थापा,"lies, tall tales",noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0077,बावड़ी,विहीर (आड़),well,irrigation,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,match on विहीर,no
+V0078,भुलाबाई,भोंडला,Bhondla (women's festival),festival,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0079,महालक्ष्मी,गौरी चा सण,Gauri festival,festival,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0080,कवळे,कोहळे,ash gourd,crop,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0081,खेबड़ा,बोबड़ा,lisping,adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0082,डवरे,भांगलण (शेतीतले एक मशागतीचे काम),"weeding, inter-cultivation",farm_operation,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,match on भांगलण,no
+V0083,ढोरं,जनावरे,"livestock, cattle",livestock,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=2,,no
+V0084,मच्छी,मासे,fish,food,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0085,मोठं,गायीचं मांस,beef,food,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,Varhadi form is also a standard Marathi word (big),no
+V0086,बडेका,बीफ,beef,food,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0087,मुज्जोर,अडेलतट्टू,obstinate person,insult_slang,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0088,जळकी,अ‍ॅसिडीटी,"acidity, heartburn",body,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0089,भगुनं,खोलगट भांड,deep vessel,kitchen,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0090,डोगरं,खोलगट भांड,deep vessel,kitchen,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0091,अड्डूल,कंच्यांमधली मोठी गोटी,big marble (game),noun,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0092,फुट्टल,फुटलेली,broken,adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0093,लुप्पांग,पाठीचा कणा वाकलेला,hunchbacked,adjective,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0094,हेमट्या,हातचं राखून,holding back,adverb,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0095,एक बिल्लास,एक हात,one handspan,measure,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0096,फुगे,पाणीपुरी,panipuri,food,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0097,कान्नू बा,काय माहिती बुवा,who knows,phrase,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0098,इचिबीन,समोरच्याच्या भगिनीचा उद्धार,sister-directed curse,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0099,मायबीन,मातोश्री आणि भगिनीचा उद्धार,mother/sister-directed curse,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0100,भसकलं,फसलं,"got stuck, got fooled",verb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0101,उच्चक,आगाऊ,cheeky,adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0102,निरा / नीरानाम,निव्वळ,"merely, purely",adverb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0103,हलका,डोक्याने कमी काम करणारा,dim-witted,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0104,बावला,डोक्याने कमी काम करणारा,dim-witted,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0105,दिमागानं पैदल,डोक्याने कमी काम करणारा,dim-witted,insult_slang,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0106,दिमागचोट्टा,डोक्याने कमी काम करणारा,dim-witted,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0107,पायीपायी,पैदल,on foot,adverb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0108,चोट्टा,भुरटा चोर,petty thief,person,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0109,बेलन्या,मूर्ख,fool,insult_slang,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0110,इमल्या,मूर्ख,fool,insult_slang,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0111,संतरसोल्या,मूर्ख,fool,insult_slang,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0112,घमेले,पाटी,shallow iron pan for carrying soil,tool,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0113,गुर्जी,शिक्षक,teacher,person,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0114,गोटा,दगड,stone,nature,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0115,बंड़ा,दगड,stone,nature,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0116,टोम्या गोचिड,चिपकू लाळघोट्या माणूस,clingy flatterer,insult_slang,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0117,चिलमतोंडया,शेलाटे लांब तोंडाचा माणूस,thin long-faced man,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0118,बेंदुर,बैल पोळा,Bail Pola (bullock festival),festival,yes,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,livestock festival,no
+V0119,धतींग,तमाशा,"a scene, commotion",noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0120,डींगडींग,सारखी कुरबूर करणे,constant grumbling,verb,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0121,पदवने,प्रचंड मेहनत करवणे,to make someone toil hard,verb,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0122,पादवणे,मारणे,to beat,verb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=3,,no
+V0123,ईवाई,व्याही,co-father-in-law,kinship,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0124,ईन,विहिन,co-mother-in-law,kinship,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0125,टांग,पाय,leg,body,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0126,टांग मारणे,सोडून देणे,"to abandon, ditch",verb,no,phrase,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0127,इत्तरफिसका / इत्तरफिसकी,उगाच दात काढून हसणारा/री,one who grins needlessly,insult_slang,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0128,डच्च,पूर्ण भरलेला,completely full,adjective,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0129,भो,जोरात,"forcefully, loudly",adverb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0130,बांडी,कमी उंचीचे,short (in height),adjective,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0131,डुमना,कमी उंचीचा,short (person),adjective,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0132,डुबर्या / डुबरा,गुटगुटीत गोरा बाळसेदार,"plump, fair, chubby (child)",adjective,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0133,रमसट,दणकट,sturdy,adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0134,कयकली,पारोशी,"stale, unwashed",adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0135,खरकटी,पारोशी,"stale, unwashed",adjective,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0136,गल्लुर्‍या,पैसा,money,noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0137,धत्तुर्‍या,ठेंगा,"thumbs-down, nothing",noun,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0138,डिकने,चिकटणे,to stick,verb,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0139,सोंडे,गव्हातले पोरकीडे,weevils in wheat,pest,yes,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,stored-grain pest,no
+V0140,पैलान,पैलवान,wrestler,person,no,word,yes,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=4,,no
+V0141,बोथर,बोथट,blunt,adjective,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937?page=1,DISPUTED: a commenter suggests बोचर,no
+V0142,सीधा / सरका,सरळ,straight,adjective,no,word,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,WP lists सीधा as a Hindi form too,no
+V0143,बुडा,म्हातारा,old man,person,no,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0144,पगला / भैताड,वेडा,"mad, stupid",adjective,no,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0145,अंगूर,द्राक्ष,grapes,crop,yes,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,Hindi loan,no
+V0146,सर्प,साप,snake,animal,yes,word,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,eastern Vidarbha; field hazard,no
+V0147,मले,मला,to me,pronoun,no,word,yes,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect; Saamana: Varnika Kakade on Varhadi; KisaanDost word rules (VAHNT corpus counts),https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language; https://www.saamana.com/article-by-varnika-kakade-on-varhadi-language/; repo: datasets/varhadi_word_rules.csv,VAHNT count मले=310,no
+V0148,त्याहिले,त्यांना,to them,pronoun,no,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,REPO: 0 occurrences in VAHNT corpus (do_not_use),no
+V0149,त्याले,त्यांना,to them,pronoun,no,word,check,The News Dirt: Varhadi dialect; Saamana: Varnika Kakade on Varhadi; English Wikipedia: Varhadi dialect,https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language; https://www.saamana.com/article-by-varnika-kakade-on-varhadi-language/; https://en.wikipedia.org/wiki/Varhadi_dialect,REPO: corpus uses त्याले for त्याला and त्यायले for त्यांना,no
+V0150,अबे,अरे,hey (vocative),interjection,no,word,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,REPO: 0 occurrences in VAHNT corpus (do_not_use),no
+V0151,बहुत / लय (bahut / lay),खूप,a lot,adverb,no,word,check,The News Dirt: Varhadi dialect,https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,source gives roman only; Devanagari transliterated by researcher,no
+V0152,पाञ्च / पांच (paanch),पाच,five,number,no,word,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,pronunciation variant (च as /tʃ/); roman only in source,no
+V0153,मी जाउन राहिलो,मी जातोय,I am going,verb_form,no,phrase,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,,no
+V0154,मी आली,मी आले,I (fem.) came,verb_form,no,phrase,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0155,तुयावाला पेन दे,तुझा पेन दे,give your pen,phrase,no,phrase,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,REPO: तुयावाला has 0 occurrences in VAHNT corpus (do_not_use),no
+V0156,पानी घेऊन घे,पाणी घे,(please) have some water,phrase,no,phrase,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0157,थो बहूत अभ्यास करे,तो खूप अभ्यास करायचा,he studied a lot,phrase,no,phrase,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,REPO: थो has 0 occurrences in VAHNT corpus (do_not_use),no
+V0158,जानं पडते,जा लागते,(I) have to go,verb_form,no,phrase,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,used near Madhya Pradesh; REPO: 0 occurrences in VAHNT corpus (do_not_use),no
+V0159,-जो / -जा (zo / zā),,"emphatic or polite request suffix, sg./pl.",suffix,no,suffix_rule,check,English Wikipedia: Varhadi dialect; The News Dirt: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect; https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,no standard Marathi equivalent given; REPO: 0 occurrences in VAHNT corpus (do_not_use),no
+V0160,माह्या पोरीच्या लग्नाले येजा,,please attend my daughter's wedding,phrase,no,phrase,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,source gives no Marathi version,no
+V0161,मी मंदिरात जायलो,मी मंदिरात जाऊन राहिलो,I am going to the temple,verb_form,no,phrase,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,"Marathwada-influenced Varhadi; the right side is itself Varhadi, not standard Marathi",no
+V0162,तुयावाला,तुझा,your (sg.),pronoun,no,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,REPO: 0 occurrences in VAHNT corpus (do_not_use),no
+V0163,माह्या,,my,pronoun,no,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,source gives no Marathi form; repo row माझ्या->माह्या covers it,no
+V0164,-ले,-ला / -ना,dative/accusative case ending,case_ending,no,suffix_rule,check,Saamana: Varnika Kakade on Varhadi; English Wikipedia: Varhadi dialect; KisaanDost grammar rules,https://www.saamana.com/article-by-varnika-kakade-on-varhadi-language/; https://en.wikipedia.org/wiki/Varhadi_dialect; repo: bot/varhadi_style.json (rules),"SM says shared with Khandeshi; collides with verbs ending in -ले/-ला (केले, गेले, आला) | VAHNT: मले 310, तुले 197, त्याले 872, तिले 56, आमाले 111, तुमाले 466, त्यायले 564; nouns too (पोराले, बापाले, लोकायले)",no
+V0165,लग्नाले,,to the wedding,noun,no,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,Marathi not stated by source; only implied by the -ले rule,no
+V0166,अगा (aga),,vocative particle,interjection,no,word,check,The News Dirt: Varhadi dialect,https://www.thenewsdirt.com/post/varhadi-dialect-exploring-vidarbha-s-unique-marathi-language,no Marathi equivalent given,no
+V0167,कथिल,शिसे,lead (metal),noun,no,word,check,Maayboli thread वर्‍हाडी शब्दकोश,https://www.maayboli.com/node/11937,"UNCLEAR: given in a reply, not listed as Varhadi",no
+V0168,-उन राहिलो (मी जाउन राहिलो),-तोय (मी जातोय),present progressive,verb_form,no,suffix_rule,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,pattern V-उन राहिलो = V-तोय; repo corpus prefers stem+त हाय (करत हाय),no
+V0169,मी आली (-ई),मी आले (-ए),1sg feminine past ending,verb_form,no,suffix_rule,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0170,-े (करे),-आयचा (करायचा),habitual past (used to),verb_form,no,suffix_rule,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0171,करे,करायचा,(he) used to do,verb_form,no,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0172,तो लय अभ्यास करे,तो खूप अभ्यास करायचा,he studied a lot,phrase,no,phrase,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,,no
+V0173,लय,खूप,"a lot, very",adverb,no,word,yes,English Wikipedia: Varhadi dialect; KisaanDost word rules (VAHNT corpus counts),https://en.wikipedia.org/wiki/Varhadi_dialect; repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0174,पानी,पाणी,water,noun,yes,word,check,English Wikipedia: Varhadi dialect,https://en.wikipedia.org/wiki/Varhadi_dialect,irrigation context; source shows न for ण in one example only,no
+V0175,य (ळ pronounced as y),ळ,retroflex lateral ळ pronounced as approximant y,phonology,no,suffix_rule,check,"Mhaiskar 2014, IJELLH II(VII)",https://www.academia.edu/62739060,"pronunciation only, no word examples; western Vidarbha (Amravati division)",no
+V0176,नाई,नाही,"no, not",negation,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count नाई=1201,no
+V0177,हाय,आहे,is,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0178,हायत,आहेत,are,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count हायत=146,no
+V0179,हायस,आहेस,(you sg.) are,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count हायस=36,no
+V0180,आमी,आम्ही,we,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0181,तुमी,तुम्ही,you (pl.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0182,तुले,तुला,to you,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count तुले=197,no
+V0183,त्याले,त्याला,to him,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count त्याले=872,no
+V0184,तिले,तिला,to her,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count तिले=56,no
+V0185,आमाले,आम्हाला,to us,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count आमाले=111,no
+V0186,तुमाले,तुम्हाला,to you (pl.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count तुमाले=466,no
+V0187,त्यायले,त्यांना,to them,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count त्यायले=564,no
+V0188,त्यायनं,त्यांनी,by them,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count त्यायनं=261,no
+V0189,त्यायच्या,त्यांच्या,their (oblique),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0190,त्यायचा,त्यांचा,their (m.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0191,त्यायचे,त्यांचे,their (pl.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0192,त्यायची,त्यांची,their (f.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0193,त्यायचं,त्यांचं,their (n.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0194,त्यानं,त्याने,by him,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count त्यानं=431,no
+V0195,तिनं,तिने,by her,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count तिनं=24,no
+V0196,तवा,तेव्हा,then,adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0197,जवा,जेव्हा,when,adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0198,मंग,मग,then,adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0199,अन्,आणि,and,conjunction,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count अन्=3234,no
+V0200,पायजे,पाहिजे,"need, should",verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0201,म्हतलं,म्हटलं,said,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count म्हतलं=982,no
+V0202,देलं,दिलं,gave (n.),verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0203,देला,दिला,gave (m.),verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0204,देली,दिली,gave (f.),verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0205,देले,दिले,gave (pl.),verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0206,पायलं,पाहिलं,saw,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0207,आयकलं,ऐकलं,heard,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0208,रायला,राहिला,stayed (m.),verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0209,रायले,राहिले,stayed (pl.),verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0210,बायर,बाहेर,outside,adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0211,हाय,आहात,(you pl.) are,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0212,हावो,आहोत,(we) are,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count हावो=10,no
+V0213,नाई,नाहीत,are not,negation,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count नाई=1201,no
+V0214,नाई,नाहीस,(you sg.) are not,negation,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count नाई=1201,no
+V0215,माह्या,माझ्या,my (oblique),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count माह्या=277,no
+V0216,माह्या,माझा,my (m.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count माह्या=277,no
+V0217,माह्यी,माझी,my (f.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count माह्यी=27,no
+V0218,माह्य,माझं,my (n.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0219,माह्ये,माझे,my (pl.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0220,तुह्या,तुझ्या,your (oblique),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0221,तुह्या,तुझा,your (m.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0222,तुह्यी,तुझी,your (f.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0223,तुह्य,तुझं,your (n.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0224,तुह्ये,तुझे,your (pl.),pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0225,माह्यावर,माझ्यावर,on me,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0226,माह्यासाठी,माझ्यासाठी,for me,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0227,माह्यापासून,माझ्यापासून,from me,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0228,तुह्यावर,तुझ्यावर,on you,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0229,तुह्यासाठी,तुझ्यासाठी,for you,pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0230,जाईन,जाईल,will go,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count जाईन=179,no
+V0231,येईन,येईल,will come,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count येईन=57,no
+V0232,देईन,देईल,will give,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count देईन=93,no
+V0233,होईन,होईल,"will be, will happen",verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count होईन=130,no
+V0234,करीन,करेल,will do,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count करीन=132,no
+V0235,घेईन,घेईल,will take,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0236,खाईन,खाईल,will eat,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0237,राईन,राहील,will stay,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count राईन=49,no
+V0238,पडीन,पडेल,will fall,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0239,अशीन,असेल,will be,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0240,अशीन,असेन,(I) will be,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0241,असतीन,असतील,(they) will be,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0242,होतीन,होतील,(they) will become,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count होतीन=38,no
+V0243,जातीन,जातील,(they) will go,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count जातीन=27,no
+V0244,देतीन,देतील,(they) will give,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0245,करतीन,करतील,(they) will do,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count करतीन=64,no
+V0246,म्हणतीन,म्हणतील,(they) will say,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count म्हणतीन=21,no
+V0247,आयकतीन,ऐकतील,(they) will hear,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0248,पायतीन,पाहतील,(they) will see,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0249,करशीन,करशील,(you sg.) will do,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0250,असशीन,असशील,(you sg.) will be,copula,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0251,म्हतलं,म्हणाला,(he) said,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count म्हतलं=982,no
+V0252,म्हतलं,म्हणाले,(they) said,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,VAHNT count म्हतलं=982,no
+V0253,सांगतलं,सांगितलं,told,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0254,आयकून,ऐकून,having heard,verb_form,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0255,तती,तिथे,there,adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0256,तती,तिथं,there,adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0257,जती,जिथे,where (relative),adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0258,अती,इथे,here,adverb,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0259,काई,काही,"some, any",pronoun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0260,माईत,माहीत,known,adjective,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0261,झाडाले,झाडाला,to the tree,noun,yes,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0262,पिकाले,पिकाला,to the crop,crop,yes,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0263,जमिनीले,जमिनीला,to the land,noun,yes,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0264,पाण्याले,पाण्याला,to the water,noun,yes,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0265,लोकायले,लोकांना,to the people,noun,no,word,yes,KisaanDost word rules (VAHNT corpus counts),repo: datasets/varhadi_word_rules.csv,attested in VAHNT text (checked by tests/test_bot.py per enforce_note),no
+V0266,शेतकऱ्याले,शेतकऱ्याला,to the farmer,noun,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0267,कपाशीले,कपाशीला,to the cotton crop,crop,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0268,कापसाले,कापसाला,to the cotton,crop,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0269,तुरीले,तुरीला,to the pigeon pea crop,crop,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0270,सोयाबीनले,सोयाबीनला,to the soybean,crop,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0271,संत्र्याले,संत्र्याला,to the orange tree,crop,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0272,रोपाले,रोपाला,to the seedling,crop,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0273,शेताले,शेताला,to the field,noun,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0274,फळाले,फळाला,to the fruit,crop,yes,word,yes,KisaanDost noun rules,repo: bot/varhadi_style.json (enforce_by_rule),0 in VAHNT text; derived from the dative -ले rule (dozens of corpus nouns); allowlist only,no
+V0275,-नं,-ने / -नी,agent (past transitive) ending,case_ending,no,suffix_rule,check,KisaanDost grammar rules,repo: bot/varhadi_style.json (rules),"VAHNT: त्यानं 431, तिनं 24, येशूनं 575, त्यायनं 261; collides with -ने verbs (करणे-type infinitives)",no
+V0276,"-आय- (त्यायले, लोकायले)","-आं- (त्यांना, लोकांना)",oblique stem of human plurals and ते,case_ending,no,suffix_rule,check,KisaanDost grammar rules,repo: bot/varhadi_style.json (rules),"VAHNT examples: त्यायले, त्यायनं, त्यायच्या, लोकायले, शिष्यायले",no
+V0277,देल- (देलं/देला/देली/देले),दिल- (दिलं/दिला/दिली/दिले),past stem of give,verb_form,no,suffix_rule,check,KisaanDost grammar rules,repo: bot/varhadi_style.json (rules),VAHNT: देल- 416 vs दिल- 11,no
+V0278,"-ाले / -याले (कऱ्याले, पाह्याले, समजाले)",-ायला,purpose infinitive,verb_form,no,suffix_rule,check,KisaanDost grammar rules,repo: bot/varhadi_style.json (rules),"VAHNT examples: कऱ्याले, पाह्याले, समजाले, दाखवाले, जेवाले, घेयाले",no
+V0279,पयले,आधी,"before, earlier",adverb,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=92 vT_x=0 mr_x=18 pairs=9 farm_x=4,no
+V0280,परेंत,पर्यंत,until,postposition,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=49 vT_x=14 mr_x=1 pairs=0 farm_x=2,no
+V0281,आतापरेंत,आतापर्यंत,until now,adverb,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=17 vT_x=3 mr_x=15 pairs=7 farm_x=0,no
+V0282,स्वता,स्वतः,oneself,pronoun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=31 vT_x=0 mr_x=38 pairs=18 farm_x=0,no
+V0283,स्वताच्या,स्वतःच्या,one's own,pronoun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=13 vT_x=0 mr_x=13 pairs=5 farm_x=0,no
+V0284,लोकं,लोक,people,noun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=349 vT_x=0 mr_x=419 pairs=208 farm_x=4,no
+V0285,पाऊन,पाहून,having seen,verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=83 vT_x=1 mr_x=22 pairs=11 farm_x=0,no
+V0286,राऊन,राहून,having stayed,verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=17 vT_x=7 mr_x=43 pairs=12 farm_x=0,no
+V0287,पायले,पाहिले,saw,verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=13 vT_x=0 mr_x=29 pairs=1 farm_x=0,no
+V0288,रायते,राहते,"stays, lives",verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=17 vT_x=0 mr_x=9 pairs=4 farm_x=4,no
+V0289,रायत,राहत,staying,verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=23 vT_x=1 mr_x=7 pairs=4 farm_x=3,no
+V0290,रायली,राहिली,stayed (f.),verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=22 vT_x=0 mr_x=7 pairs=4 farm_x=0,no
+V0291,रायलो,राहिलो,"stayed (I, m.)",verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=20 vT_x=0 mr_x=7 pairs=5 farm_x=0,no
+V0292,सांगतले,सांगितले,told,verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=10 vT_x=1 mr_x=115 pairs=8 farm_x=2,no
+V0293,सांगतली,सांगितली,told (f.),verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=26 vT_x=0 mr_x=35 pairs=18 farm_x=0,no
+V0294,सांगतल्या,सांगितल्या,told (f. pl.),verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=29 vT_x=0 mr_x=15 pairs=13 farm_x=0,no
+V0295,कराले,करायला,to do (purpose),verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=21 vT_x=6 mr_x=21 pairs=3 farm_x=0,no
+V0296,भेटीन,मिळेल,will get,verb_form,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=27 vT_x=4 mr_x=41 pairs=11 farm_x=4,no
+V0297,त्याच्यापासी,त्याच्यापाशी,near him,postposition,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=63 vT_x=0 mr_x=23 pairs=14 farm_x=0,no
+V0298,तुमच्यापासी,तुमच्यापाशी,near you (pl.),postposition,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=23 vT_x=0 mr_x=3 pairs=3 farm_x=0,no
+V0299,सहाय्यकाले,सहाय्यकाला,to the assistant,noun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=0 vT_x=0 mr_x=0 pairs=0 farm_x=3 dat_nouns=260,no
+V0300,खताले,खताला,to the fertiliser,noun,yes,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=0 vT_x=0 mr_x=0 pairs=0 farm_x=2 dat_nouns=260,no
+V0301,तज्ज्ञाले,तज्ज्ञाला,to the expert,noun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=0 vT_x=0 mr_x=0 pairs=0 farm_x=2 dat_nouns=260,no
+V0302,जिल्ह्याले,जिल्ह्याला,to the district,noun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=0 vT_x=0 mr_x=0 pairs=0 farm_x=2 dat_nouns=260,no
+V0303,ज्याले,ज्याला,to whom (relative),pronoun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=63 vT_x=0 mr_x=59 pairs=28 farm_x=1 dat_nouns=260,no
+V0304,कोणाले,कोणाला,to whom,pronoun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=56 vT_x=0 mr_x=11 pairs=8 farm_x=0 dat_nouns=260,no
+V0305,शरीराले,शरीराला,to the body,noun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=13 vT_x=0 mr_x=6 pairs=5 farm_x=1 dat_nouns=260,no
+V0306,देवाले,देवाला,to God,noun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=41 vT_x=1 mr_x=19 pairs=11 farm_x=0 dat_nouns=260,no
+V0307,माणसाले,माणसाला,to the person,noun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=58 vT_x=2 mr_x=39 pairs=27 farm_x=0 dat_nouns=260,no
+V0308,आपल्याले,आपल्याला,"to us, to oneself",pronoun,no,word,yes,KisaanDost farm swaps,repo: bot/farm_kb.json (rules),vT_y=8 vT_x=0 mr_x=7 pairs=4 farm_x=1 dat_nouns=260,no
